@@ -11,6 +11,10 @@ public class LocalConf {
 	public File ongoingSeriesFolder;
 	public File downloadTargetFolder;
 	
+	public LocalConf(){
+		this.loadLocalConfiguration();
+	}
+	
 	public void loadLocalConfiguration(){
 		Properties prop = new Properties();
 		InputStream input = null;
@@ -22,7 +26,9 @@ public class LocalConf {
 			prop.load(input);
 
 			String ongoingSeriesFolderPath = prop.getProperty("ongoingSeriesFolder");
+			this.ongoingSeriesFolder = new File(ongoingSeriesFolderPath);
 			String downloadTargetFolderPath = prop.getProperty("downloadTargetFolder");
+			this.downloadTargetFolder = new File(downloadTargetFolderPath);
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
