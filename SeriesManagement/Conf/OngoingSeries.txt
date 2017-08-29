@@ -5,4 +5,4 @@
 4747/isekai-shokudou=Isekai Shokudou
 4783/new-game2=New Game!!
 4793/gamers=Gamers!
-2766/recreators=Re-Creators
+#2766/recreators=Re-Creators

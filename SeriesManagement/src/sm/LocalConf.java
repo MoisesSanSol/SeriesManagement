@@ -10,6 +10,8 @@ public class LocalConf {
 
 	public File ongoingSeriesFolder;
 	public File downloadTargetFolder;
+	public static String animeFlvBaseUrl = "https://animeflv.net";
+	public static String animeFlvSeriesMainPageBaseUrl = "https://animeflv.net/anime/";
 	
 	public LocalConf(){
 		this.loadLocalConfiguration();
@@ -21,7 +23,7 @@ public class LocalConf {
 
 		try {
 
-			input = new FileInputStream("LocalConfiguration.properties");
+			input = new FileInputStream("Conf/LocalConfiguration.properties");
 
 			prop.load(input);
 
