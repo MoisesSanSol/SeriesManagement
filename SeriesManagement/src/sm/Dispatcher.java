@@ -47,6 +47,9 @@ public class Dispatcher {
 	
 	public static void downloadOngoingSeries(String seriesId, String targetFolder) throws Exception{
 		
+		System.out.println("*** Download Ongoing Series ***");
+		System.out.println("* Series Id: " + seriesId);
+		System.out.println("* Target Folder: " + targetFolder);
 		
 		LocalConf conf = new LocalConf();
 		
@@ -80,16 +83,22 @@ public class Dispatcher {
 	
 	public static void downloadAllOngoingSeries() throws Exception{
 		
+		System.out.println("*** Download All Ongoing Series ***");
+		
 		Properties prop = new Properties();
 		InputStream input = new FileInputStream("Conf/OngoingSeries.txt");
 
 		prop.load(input);
 
-		Enumeration<?> e = prop.propertyNames();
-		while (e.hasMoreElements()) {
-			String key = (String) e.nextElement();
+		Enumeration<?> allSeries = prop.propertyNames();
+		
+		while (allSeries.hasMoreElements()) {
+			
+			String key = (String) allSeries.nextElement();
 			String value = prop.getProperty(key);
 			Dispatcher.downloadOngoingSeries(key, value);
+			
+			System.out.println("");
 		}
 	}
 
