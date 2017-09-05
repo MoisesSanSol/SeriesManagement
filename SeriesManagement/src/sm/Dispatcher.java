@@ -16,6 +16,10 @@ public class Dispatcher {
 
 	public static void downloadAllEpisodes(String seriesId, String targetFolder) throws Exception{
 		
+		System.out.println("*** Download All Episodes ***");
+		System.out.println("* Series Id: " + seriesId);
+		System.out.println("* Target Folder: " + targetFolder);
+		System.out.println();
 		
 		LocalConf conf = new LocalConf();
 		
@@ -45,7 +49,7 @@ public class Dispatcher {
 			}
 			else{
 				
-				System.out.println("*** Episode Exists ***: " + episodeNumber);
+				System.out.println("\tEpisode " + episodeNumber + " already exists");
 			}
 		}
 		

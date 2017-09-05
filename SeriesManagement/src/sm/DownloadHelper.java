@@ -18,4 +18,9 @@ public class DownloadHelper {
 		FileUtils.copyURLToFile(new URL(url), target);
 		
 	}
+	
+	public static void downloadHelpForOpenload(String openloadUrl){
+		
+	}
+	
 }
