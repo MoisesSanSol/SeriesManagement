@@ -2,6 +2,7 @@ package sm;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,6 +62,8 @@ public class WebScrapper {
 			}
 		}
 		
+		Collections.sort(episodeLinks);
+		
 		return episodeLinks;
 	}
 	
@@ -75,5 +78,14 @@ public class WebScrapper {
 		return zippyUrl;
 	}
 	
-	
+	public static String getOpenloadUrl(Document episodePage) throws Exception{
+		
+		String openloadUrl = "";
+		
+		String redirectLink = episodePage.select("a[href*=openload]").first().attr("href");
+		String[] urls = redirectLink.split("=http");
+		openloadUrl = "http" +  URLDecoder.decode(urls[1], "UTF-8");
+		
+		return openloadUrl;
+	}
 }

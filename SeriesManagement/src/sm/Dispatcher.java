@@ -35,9 +35,16 @@ public class Dispatcher {
 				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
 				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
 				String fileUrl = WebScrapper.getFileUrlFromZippyshare(zippyUrl);
-				DownloadHelper.downloadVideo(fileUrl, targetFile);
+				if(!fileUrl.equals("NotFound")){
+					DownloadHelper.downloadVideo(fileUrl, targetFile);
+				}
+				else{
+					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
+					System.out.println("Alternative download: " + openloadUrl);
+				}
 			}
 			else{
+				
 				System.out.println("*** Episode Exists ***: " + episodeNumber);
 			}
 		}
@@ -50,6 +57,7 @@ public class Dispatcher {
 		System.out.println("*** Download Ongoing Series ***");
 		System.out.println("* Series Id: " + seriesId);
 		System.out.println("* Target Folder: " + targetFolder);
+		System.out.println();
 		
 		LocalConf conf = new LocalConf();
 		
@@ -83,7 +91,7 @@ public class Dispatcher {
 	
 	public static void downloadAllOngoingSeries() throws Exception{
 		
-		System.out.println("*** Download All Ongoing Series ***");
+		System.out.println("*** Download All Ongoing Series ***\n");
 		
 		Properties prop = new Properties();
 		InputStream input = new FileInputStream("Conf/OngoingSeries.txt");

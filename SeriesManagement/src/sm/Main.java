@@ -4,7 +4,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception{
 
-		System.out.println("*** Starting ***");
+		System.out.println("*** Starting ***\n");
 		
 		//Dispatcher.downloadAllEpisodes("", "");
 		Dispatcher.downloadAllOngoingSeries();
