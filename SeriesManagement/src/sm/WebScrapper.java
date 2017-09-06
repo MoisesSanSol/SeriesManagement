@@ -88,4 +88,15 @@ public class WebScrapper {
 		
 		return openloadUrl;
 	}
+	
+	
+	public static String getSeriesId(Document episodePage) throws Exception{
+		
+		String seriesId = "";
+		
+		String all = episodePage.select("script:containsData(anime_id)").first().html().replace("\r\n", "");
+		seriesId = all.replaceAll(".*?anime_id = (\\d+?);.*$", "$1");
+		
+		return seriesId;
+	}
 }

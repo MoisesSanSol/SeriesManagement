@@ -6,8 +6,8 @@ public class Main {
 
 		System.out.println("*** Starting ***\n");
 		
-		Dispatcher.downloadAllEpisodes("2635/rewrite-moon-and-terra", "Rewrite Moon and Terra");
-		//Dispatcher.downloadAllOngoingSeries();
+		//Dispatcher.downloadAllEpisodes("", "");
+		Dispatcher.downloadAllOngoingSeries();
 		
 		System.out.println("*** Finished ***");
 	}

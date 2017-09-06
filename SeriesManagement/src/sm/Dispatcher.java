@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -30,6 +31,8 @@ public class Dispatcher {
 		Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
 		ArrayList<String> episodesUrls = WebScrapper.getAllEpisodesUrls(mainSeriesPage);
 		
+		HashMap<String,String> failedDownloads = new HashMap<String,String>();
+		
 		for(String episodeUrl : episodesUrls){
 			System.out.println(episodeUrl);
 			String episodeNumber = episodeUrl.replaceAll(".+-", "");
@@ -45,12 +48,19 @@ public class Dispatcher {
 				else{
 					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
 					System.out.println("Alternative download: " + openloadUrl);
+					failedDownloads.put(openloadUrl, episodeNumber);
 				}
 			}
 			else{
 				
 				System.out.println("\tEpisode " + episodeNumber + " already exists");
 			}
+		}
+		
+		if(!failedDownloads.isEmpty()){
+			String seriesFileId = WebScrapper.getSeriesId(mainSeriesPage);
+			String targetFolderPath = conf.downloadTargetFolder.getAbsolutePath() + "/" + targetFolder + "/";
+			DownloadHelper.downloadHelpForOpenload(failedDownloads, seriesShort, seriesFileId, targetFolderPath);
 		}
 		
 	}
