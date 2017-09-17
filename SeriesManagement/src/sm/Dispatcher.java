@@ -35,7 +35,8 @@ public class Dispatcher {
 		
 		for(String episodeUrl : episodesUrls){
 			System.out.println(episodeUrl);
-			String episodeNumber = episodeUrl.replaceAll(".+-", "");
+			String episodeNumberRaw = episodeUrl.replaceAll(".+-", "");
+			String episodeNumber = String.format("%02d", Integer.parseInt(episodeNumberRaw));
 			File targetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/" + targetFolder + "/" + seriesShort + "_" + episodeNumber + ".mp4");
 			
 			if(!targetFile.exists()){
