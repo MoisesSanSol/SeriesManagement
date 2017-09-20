@@ -6,3 +6,4 @@
 4783/new-game2=New Game!!
 4793/gamers=Gamers!
 #2766/recreators=Re-Creators
+4717/fateapocrypha=Fate Apocrypha
