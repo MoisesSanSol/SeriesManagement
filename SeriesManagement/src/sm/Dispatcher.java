@@ -49,7 +49,7 @@ public class Dispatcher {
 				else{
 					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
 					System.out.println("Alternative download: " + openloadUrl);
-					failedDownloads.put(openloadUrl, episodeNumber);
+					failedDownloads.put(openloadUrl, episodeNumberRaw);
 				}
 			}
 			else{
