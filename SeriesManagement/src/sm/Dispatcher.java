@@ -83,6 +83,11 @@ public class Dispatcher {
 		Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
 		ArrayList<String> episodesUrls = WebScrapper.getAllEpisodesUrls(mainSeriesPage);
 		
+		String seriesStatus = WebScrapper.getSeriesStatus(mainSeriesPage);
+		if(seriesStatus.equals("Finalizado")){
+				Audit.getInstance().addLog(targetFolder + ": " + seriesStatus);
+		}
+		
 		for(String episodeUrl : episodesUrls){
 			System.out.println(episodeUrl);
 			String episodeNumberRaw = episodeUrl.replaceAll(".+-", "") ;
@@ -96,6 +101,7 @@ public class Dispatcher {
 				File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/Movies/" + seriesShort + "_" + episodeNumber + ".mp4");
 				DownloadHelper.downloadVideo(fileUrl, localTargetFile);
 				FileUtils.copyFile(localTargetFile, targetFile);
+				Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber);
 			}
 			else{
 				System.out.println("*** Episode Exists ***: " + episodeNumber);

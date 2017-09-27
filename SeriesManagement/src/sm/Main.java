@@ -9,6 +9,8 @@ public class Main {
 		//Dispatcher.downloadAllEpisodes("", "");
 		Dispatcher.downloadAllOngoingSeries();
 		
+		Audit.getInstance().dump();
+		
 		System.out.println("*** Finished ***");
 	}
 
