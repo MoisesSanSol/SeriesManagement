@@ -99,4 +99,14 @@ public class WebScrapper {
 		
 		return seriesId;
 	}
+	
+	public static String getSeriesStatus(Document mainSeriesPage) throws Exception{
+		
+		String seriesStatus = "";
+		
+		seriesStatus = mainSeriesPage.select(".fa-tv").first().text();
+		
+		return seriesStatus;
+	}
+	
 }
