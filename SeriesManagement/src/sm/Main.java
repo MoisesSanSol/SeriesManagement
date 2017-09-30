@@ -6,8 +6,8 @@ public class Main {
 
 		System.out.println("*** Starting ***\n");
 		
-		//Dispatcher.downloadAllEpisodes("", "");
-		Dispatcher.downloadAllOngoingSeries();
+		Dispatcher.downloadAllEpisodes("3473/kobayashi-san-chi-no-maid-dragon", "Kobayashi-san Chi no Maid Dragon");
+		//Dispatcher.downloadAllOngoingSeries();
 		
 		System.out.println("*** Finished ***");
 	}
