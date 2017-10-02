@@ -22,7 +22,7 @@ public class Dispatcher {
 		System.out.println("* Target Folder: " + targetFolder);
 		System.out.println();
 		
-		LocalConf conf = new LocalConf();
+		LocalConf conf = LocalConf.getInstance();
 		
 		String seriesShort = seriesId.split("/")[1];
 		
@@ -74,7 +74,7 @@ public class Dispatcher {
 		System.out.println("* Target Folder: " + targetFolder);
 		System.out.println();
 		
-		LocalConf conf = new LocalConf();
+		LocalConf conf = LocalConf.getInstance();
 		
 		String seriesShort = seriesId.split("/")[1];
 		
@@ -131,4 +131,27 @@ public class Dispatcher {
 		}
 	}
 
+	public static void checkAllOngoingSeriesStatus() throws Exception{
+		
+		System.out.println("*** Check All Ongoing Series Status***\n");
+		
+		Properties prop = new Properties();
+		InputStream input = new FileInputStream("Conf/OngoingSeries.txt");
+
+		prop.load(input);
+
+		Enumeration<?> allSeries = prop.propertyNames();
+		
+		while (allSeries.hasMoreElements()) {
+			
+			String key = (String) allSeries.nextElement();
+			String value = prop.getProperty(key);
+			String mainSeriesPageUrl = LocalConf.animeFlvSeriesMainPageBaseUrl + key;
+			Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
+			String status = WebScrapper.getSeriesStatus(mainSeriesPage);
+			System.out.println(value + ": " + status);
+		}
+		
+	}
+	
 }

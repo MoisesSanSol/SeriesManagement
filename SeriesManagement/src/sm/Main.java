@@ -6,8 +6,9 @@ public class Main {
 
 		System.out.println("*** Starting ***\n");
 		
-		//Dispatcher.downloadAllEpisodes("", "");
-		Dispatcher.downloadAllOngoingSeries();
+		Dispatcher.downloadAllEpisodes("2620/gabriel-dropout", "Gabriel DropOut");
+		//Dispatcher.downloadAllOngoingSeries();
+		//Dispatcher.checkAllOngoingSeriesStatus();
 		
 		Audit.getInstance().dump();
 		

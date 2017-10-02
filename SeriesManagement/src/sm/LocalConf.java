@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+// Singleton Configuration class.
 public class LocalConf {
 
 	public File ongoingSeriesFolder;
@@ -13,8 +14,17 @@ public class LocalConf {
 	public static String animeFlvBaseUrl = "https://animeflv.net";
 	public static String animeFlvSeriesMainPageBaseUrl = "https://animeflv.net/anime/";
 	
-	public LocalConf(){
+	private static LocalConf instance;
+	
+	private LocalConf(){
 		this.loadLocalConfiguration();
+	}
+	
+	public static LocalConf getInstance(){
+      if(instance == null) {
+          instance = new LocalConf();
+       }
+       return instance;
 	}
 	
 	public void loadLocalConfiguration(){
