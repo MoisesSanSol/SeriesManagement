@@ -1,6 +1,6 @@
 #4778/centaur-no-nayami=Centaur no Nayami
 #4767/made-in-abyss=Made in Abyss
-#4719/senki-zesshou-symphogear-axz=Senki Zesshou Symphogear AXZ
+4719/senki-zesshou-symphogear-axz=Senki Zesshou Symphogear AXZ
 #3692/boku-no-hero-academia-2nd-season=Boku no Hero Academia 2nd Season
 #4747/isekai-shokudou=Isekai Shokudou
 #4783/new-game2=New Game!!
@@ -10,3 +10,7 @@
 4874/just-because=Just Because
 4862/osake-wa-fuufu-ni-natte-kara=Osake wa Fuufu ni Natte kara
 4860/shokugeki-no-souma-san-no-sara=Shokugeki no Souma San no Sara
+4879/shoujo-shuumatsu-ryokou=Shoujo Shuumatsu Ryokou
+4897/himouto-umaruchan-r=Himouto! Umaru-chan R
+4891/kekkai-sensen-beyond=Kekkai Sensen & Beyond
+4884/blend-s=Blend S
