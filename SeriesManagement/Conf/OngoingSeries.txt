@@ -1,12 +1,22 @@
+### Past series
+
 #4778/centaur-no-nayami=Centaur no Nayami
 #4767/made-in-abyss=Made in Abyss
-4719/senki-zesshou-symphogear-axz=Senki Zesshou Symphogear AXZ
+#4719/senki-zesshou-symphogear-axz=Senki Zesshou Symphogear AXZ
 #3692/boku-no-hero-academia-2nd-season=Boku no Hero Academia 2nd Season
 #4747/isekai-shokudou=Isekai Shokudou
 #4783/new-game2=New Game!!
 #4793/gamers=Gamers!
+#1612/yuuki-yuuna-wa-yusha-de-aru=Yuuki Yuuna wa Yuusha de Aru
+#2501/mahoutsukai-no-yome-hoshi-matsu-hito=Mahoutsukai no Yome- Hoshi Matsu Hito
+
+### Currently ignored
+
 #2766/recreators=Re-Creators
 #4717/fateapocrypha=Fate Apocrypha
+
+### Actually Ongoing
+
 4874/just-because=Just Because
 4862/osake-wa-fuufu-ni-natte-kara=Osake wa Fuufu ni Natte kara
 4860/shokugeki-no-souma-san-no-sara=Shokugeki no Souma San no Sara
@@ -14,3 +24,7 @@
 4897/himouto-umaruchan-r=Himouto! Umaru-chan R
 4891/kekkai-sensen-beyond=Kekkai Sensen & Beyond
 4884/blend-s=Blend S
+4861/juuni-taisen=Juuni Taisen
+4886/mahoutsukai-no-yome=Mahoutsukai no Yome
+4881/yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou=Yuuki Yuuna wa Yuusha de Aru- Washio Sumi no Shou
+4896/imouto-sae-ireba-iiImouto sae Ireba Ii
