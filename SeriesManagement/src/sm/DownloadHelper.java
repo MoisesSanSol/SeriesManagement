@@ -38,14 +38,14 @@ public class DownloadHelper {
 		for(String openloadUrl : openloadUrls.keySet()){
 		
 			String episodeNumber = openloadUrls.get(openloadUrl);
-			
+			String paddedEpisodeNumber = String.format("%02d", Integer.parseInt(episodeNumber));
 			writerHtml.write("<a href='" + openloadUrl + "' target='_blank'>" + seriesShort + "_" + episodeNumber + "</a><br>\r\n");
-			writerRename.write("ren \"" + seriesFileId + "_" + episodeNumber + ".mp4\" \"" + seriesShort + "_" + episodeNumber + ".mp4\"\r\n");
+			writerRename.write("ren \"" + seriesFileId + "_" + episodeNumber + ".mp4\" \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
 		}
 		writerHtml.close();
-		writerRename.write("del " + seriesShort + "_OpenloadLinks.html");
-		writerRename.write("pause");
-		writerRename.write("del " + seriesShort + "_renameHelper.bat");
+		writerRename.write("del " + seriesShort + "_OpenloadLinks.html\r\n");
+		writerRename.write("pause\r\n");
+		writerRename.write("del " + seriesShort + "_renameHelper.bat\r\n");
 		writerRename.close();
 
 	}

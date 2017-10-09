@@ -85,8 +85,15 @@ public class Dispatcher {
 		
 		String seriesStatus = WebScrapper.getSeriesStatus(mainSeriesPage);
 		if(seriesStatus.equals("Finalizado")){
-				Audit.getInstance().addLog(targetFolder + ": " + seriesStatus);
+			Audit.getInstance().addLog(targetFolder + " status: " + seriesStatus);
 		}
+		File seriesFolder = new File(conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/");
+		if(!seriesFolder.exists()) {
+			seriesFolder.mkdir();
+			Audit.getInstance().addLog(targetFolder + " did not exist. New folder created.");
+		}
+		
+		HashMap<String,String> failedDownloads = new HashMap<String,String>();
 		
 		for(String episodeUrl : episodesUrls){
 			System.out.println(episodeUrl);
@@ -98,10 +105,22 @@ public class Dispatcher {
 				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
 				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
 				String fileUrl = WebScrapper.getFileUrlFromZippyshare(zippyUrl);
-				File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/Movies/" + seriesShort + "_" + episodeNumber + ".mp4");
-				DownloadHelper.downloadVideo(fileUrl, localTargetFile);
-				FileUtils.copyFile(localTargetFile, targetFile);
-				Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber);
+				if(!fileUrl.equals("NotFound")){
+					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/Movies/" + seriesShort + "_" + episodeNumber + ".mp4");
+					DownloadHelper.downloadVideo(fileUrl, localTargetFile);
+					if(localTargetFile.length() < 100000) {
+						Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber + " has size: " + localTargetFile.length() + ", it is probably broken. Not copying it.");
+					}
+					else {
+						FileUtils.copyFile(localTargetFile, targetFile);
+						Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber);
+					}
+				}
+				else{
+					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
+					System.out.println("Alternative download: " + openloadUrl);
+					failedDownloads.put(openloadUrl, episodeNumberRaw);
+				}
 			}
 			else{
 				System.out.println("*** Episode Exists ***: " + episodeNumber);
