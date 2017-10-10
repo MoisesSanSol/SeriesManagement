@@ -27,4 +27,5 @@
 4861/juuni-taisen=Juuni Taisen
 4886/mahoutsukai-no-yome=Mahoutsukai no Yome
 4881/yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou=Yuuki Yuuna wa Yuusha de Aru- Washio Sumi no Shou
-4896/imouto-sae-ireba-iiImouto sae Ireba Ii
+4896/imouto-sae-ireba-ii=Imouto sae Ireba Ii
+4858/uq-holder-mahou-sensei-negima-2=UQ Holder!- Mahou Sensei Negima! 2
