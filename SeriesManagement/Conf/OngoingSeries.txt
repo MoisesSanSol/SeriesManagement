@@ -28,4 +28,6 @@
 4886/mahoutsukai-no-yome=Mahoutsukai no Yome
 4881/yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou=Yuuki Yuuna wa Yuusha de Aru- Washio Sumi no Shou
 4896/imouto-sae-ireba-ii=Imouto sae Ireba Ii
+4902/boku-no-kanojo-ga-majimesugiru-shobitch-na-ken=Boku no Kanojo ga Majimesugiru Sho-bitch na Ken
+4898/kujira-no-kora-wa-sajou-ni-utau=Kujira no Kora wa Sajou ni Utau
 4858/uq-holder-mahou-sensei-negima-2=UQ Holder!- Mahou Sensei Negima! 2
