@@ -10,6 +10,7 @@
 #1612/yuuki-yuuna-wa-yusha-de-aru=Yuuki Yuuna wa Yuusha de Aru
 #2501/mahoutsukai-no-yome-hoshi-matsu-hito=Mahoutsukai no Yome- Hoshi Matsu Hito
 
+
 ### Currently ignored
 
 #2766/recreators=Re-Creators

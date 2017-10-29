@@ -42,7 +42,7 @@ public class Dispatcher {
 			if(!targetFile.exists()){
 				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
 				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
-				String fileUrl = WebScrapper.getFileUrlFromZippyshare(zippyUrl);
+				String fileUrl = WebScrapper.getFileUrlFromZippyshareV2(zippyUrl);
 				if(!fileUrl.equals("NotFound")){
 					DownloadHelper.downloadVideo(fileUrl, targetFile);
 				}
