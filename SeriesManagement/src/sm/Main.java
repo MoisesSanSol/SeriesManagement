@@ -8,7 +8,6 @@ public class Main {
 		
 		//Dispatcher.downloadAllEpisodes("", "");
 		Dispatcher.downloadAllOngoingSeries();
-		//Dispatcher.checkAllOngoingSeriesStatus();
 		
 		Audit.getInstance().dump();
 		

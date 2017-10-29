@@ -104,7 +104,7 @@ public class Dispatcher {
 			if(!targetFile.exists()){
 				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
 				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
-				String fileUrl = WebScrapper.getFileUrlFromZippyshare(zippyUrl);
+				String fileUrl = WebScrapper.getFileUrlFromZippyshareV2(zippyUrl);
 				if(!fileUrl.equals("NotFound")){
 					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/Movies/" + seriesShort + "_" + episodeNumber + ".mp4");
 					DownloadHelper.downloadVideo(fileUrl, localTargetFile);
@@ -120,6 +120,7 @@ public class Dispatcher {
 					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
 					System.out.println("Alternative download: " + openloadUrl);
 					failedDownloads.put(openloadUrl, episodeNumberRaw);
+					Audit.getInstance().addLog("No Zippyshare for new " + targetFolder + " Episode: " + episodeNumber);
 				}
 			}
 			else{
@@ -127,6 +128,11 @@ public class Dispatcher {
 			}
 		}
 		
+		if(!failedDownloads.isEmpty()){
+			String seriesFileId = WebScrapper.getSeriesId(mainSeriesPage);
+			String targetFolderPath = conf.downloadTargetFolder.getAbsolutePath() + "/" + targetFolder + "/";
+			DownloadHelper.downloadHelpForOpenload(failedDownloads, seriesShort, seriesFileId, targetFolderPath);
+		}
 	}
 	
 	public static void downloadAllOngoingSeries() throws Exception{
