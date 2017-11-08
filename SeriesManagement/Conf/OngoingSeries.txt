@@ -9,16 +9,22 @@
 #4793/gamers=Gamers!
 #1612/yuuki-yuuna-wa-yusha-de-aru=Yuuki Yuuna wa Yuusha de Aru
 #2501/mahoutsukai-no-yome-hoshi-matsu-hito=Mahoutsukai no Yome- Hoshi Matsu Hito
+#2223/komori-san-wa-kotowarenai=Komori-san wa Kotowarenai!
 
+### Completed being downloaded
+#2040/okusama-ga-seito-kaichou=Okusama ga Seito Kaichou!
+#3376/ore-monogatari=Ore Monogatari!!
 
 ### Currently ignored
 
 #2766/recreators=Re-Creators
 #4717/fateapocrypha=Fate Apocrypha
+#4881/yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou=Yuuki Yuuna wa Yuusha de Aru- Washio Sumi no Shou
+#4858/uq-holder-mahou-sensei-negima-2=UQ Holder!- Mahou Sensei Negima! 2
+#4874/just-because=Just Because
 
 ### Actually Ongoing
 
-4874/just-because=Just Because
 4862/osake-wa-fuufu-ni-natte-kara=Osake wa Fuufu ni Natte kara
 4860/shokugeki-no-souma-san-no-sara=Shokugeki no Souma San no Sara
 4879/shoujo-shuumatsu-ryokou=Shoujo Shuumatsu Ryokou
@@ -27,8 +33,6 @@
 4884/blend-s=Blend S
 4861/juuni-taisen=Juuni Taisen
 4886/mahoutsukai-no-yome=Mahoutsukai no Yome
-4881/yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou=Yuuki Yuuna wa Yuusha de Aru- Washio Sumi no Shou
 4896/imouto-sae-ireba-ii=Imouto sae Ireba Ii
 4902/boku-no-kanojo-ga-majimesugiru-shobitch-na-ken=Boku no Kanojo ga Majimesugiru Sho-bitch na Ken
 4898/kujira-no-kora-wa-sajou-ni-utau=Kujira no Kora wa Sajou ni Utau
-4858/uq-holder-mahou-sensei-negima-2=UQ Holder!- Mahou Sensei Negima! 2
