@@ -49,48 +49,51 @@ public class WebScrapper {
 	public static String getFileUrlFromZippyshareV2(String url) throws Exception{
 		
 		String fileUrl = "NotFound";
-		
-		Document doc = Jsoup.connect(url).maxBodySize(0).get();	
-		
+
+		String urlBase = url.replaceAll("\\.com\\/.+", ".com");
 		System.out.println("Scrapping page: " + url);
 		
-		String urlBase = url.replaceAll("\\.com\\/.+", ".com");
-		
-		Element downloadAnchor = doc.select("a#dlbutton").first(); 
-		Element javascript = downloadAnchor.nextElementSibling();
-		
-		String[] lines =  javascript.html().split("\n");
-		
-		//System.out.println(javascript.html());
-		
-        String pattern = "var a = (\\d+)%(\\d+);";
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(lines[0]);
+		Document doc = Jsoup.connect(url).maxBodySize(0).get();	
 
-        if (m.find()) {
-           
-        	int a = Integer.parseInt(m.group(1)) %  Integer.parseInt(m.group(2));
-        	
-        	System.out.println(a);
-        	
-        	String pattern2 = "document.getElementById\\('dlbutton'\\).href = \"(.+?)\"\\+a\\+\"(.+?.mp4)\";";
-        	Pattern p2 = Pattern.compile(pattern2);
-            Matcher m2 = p2.matcher(lines[1]);
-        	
-            if (m2.find()) {
-            	
-            	fileUrl = urlBase + m2.group(1) + a + m2.group(2);
-
-            	System.out.println("File url from Zippyshare: " + fileUrl);
-            }
-            else {
-            	System.out.println("Error building url");
-            }
-        }
-        else {
-        	System.out.println("Error building url");
-        }
-		
+		if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
+			System.out.println("File not available anymore.");
+		}
+		else{
+			Element downloadAnchor = doc.select("a#dlbutton").first(); 
+			Element javascript = downloadAnchor.nextElementSibling();
+			
+			String[] lines =  javascript.html().split("\n");
+			
+			//System.out.println(javascript.html());
+			
+	        String pattern = "var a = (\\d+)%(\\d+);";
+	        Pattern p = Pattern.compile(pattern);
+	        Matcher m = p.matcher(lines[0]);
+	
+	        if (m.find()) {
+	           
+	        	int a = Integer.parseInt(m.group(1)) %  Integer.parseInt(m.group(2));
+	        	
+	        	//System.out.println(a);
+	        	
+	        	String pattern2 = "document.getElementById\\('dlbutton'\\).href = \"(.+?)\"\\+a\\+\"(.+?.mp4)\";";
+	        	Pattern p2 = Pattern.compile(pattern2);
+	            Matcher m2 = p2.matcher(lines[1]);
+	        	
+	            if (m2.find()) {
+	            	
+	            	fileUrl = urlBase + m2.group(1) + a + m2.group(2);
+	
+	            	System.out.println("File url from Zippyshare: " + fileUrl);
+	            }
+	            else {
+	            	System.out.println("Error building url");
+	            }
+	        }
+	        else {
+	        	System.out.println("Error building url");
+	        }
+		}
         return fileUrl;
 	}
 	

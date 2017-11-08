@@ -130,7 +130,7 @@ public class Dispatcher {
 		
 		if(!failedDownloads.isEmpty()){
 			String seriesFileId = WebScrapper.getSeriesId(mainSeriesPage);
-			String targetFolderPath = conf.downloadTargetFolder.getAbsolutePath() + "/" + targetFolder + "/";
+			String targetFolderPath = conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/";
 			DownloadHelper.downloadHelpForOpenload(failedDownloads, seriesShort, seriesFileId, targetFolderPath);
 		}
 	}

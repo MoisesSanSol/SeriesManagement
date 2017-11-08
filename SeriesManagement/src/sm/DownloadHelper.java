@@ -27,17 +27,15 @@ public class DownloadHelper {
 		
 	}
 	
-	public static void downloadHelpForOpenload(HashMap<String,String> openloadUrls, String seriesShort, String seriesFileId, String targetFolder) throws Exception{
+	public static void downloadHelpForOpenload(HashMap<String,String> openloadUrls, String seriesShort, String seriesFileId, String targetFolderPath) throws Exception{
 		
-		File folder = new File(targetFolder);
-		if(!folder.exists()) {
-			folder.mkdir();
-		}
+		LocalConf conf = LocalConf.getInstance();
+		String localSeriesFolderPath = conf.downloadTargetFolder.getAbsolutePath() + "/Movies/";
 		
-		File donwnloadLinks = new File(targetFolder + seriesShort + "_OpenloadLinks.html");
+		File donwnloadLinks = new File(localSeriesFolderPath + seriesShort + "_OpenloadLinks.html");
 		Writer writerHtml = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(donwnloadLinks), "UTF-8"));
 
-		File renameHelper = new File(targetFolder + seriesShort + "_renameHelper.bat");
+		File renameHelper = new File(localSeriesFolderPath + seriesShort + "_renameHelper.bat");
 		Writer writerRename = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(renameHelper), "UTF-8"));
 		
 		for(String openloadUrl : openloadUrls.keySet()){
@@ -46,6 +44,9 @@ public class DownloadHelper {
 			String paddedEpisodeNumber = String.format("%02d", Integer.parseInt(episodeNumber));
 			writerHtml.write("<a href='" + openloadUrl + "' target='_blank'>" + seriesShort + "_" + episodeNumber + "</a><br>\r\n");
 			writerRename.write("ren \"" + seriesFileId + "_" + episodeNumber + ".mp4\" \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
+			writerRename.write("pause\r\n");
+			writerRename.write("move \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\" \"" + targetFolderPath + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
+			writerRename.write("pause\r\n");
 		}
 		writerHtml.close();
 		writerRename.write("del " + seriesShort + "_OpenloadLinks.html\r\n");
@@ -53,33 +54,4 @@ public class DownloadHelper {
 		writerRename.write("del " + seriesShort + "_renameHelper.bat\r\n");
 		writerRename.close();
 	}
-	
-	public static void downloadHelpForOpenload_Ongoing(HashMap<String,String> openloadUrls, String seriesShort, String seriesFileId, String targetFolder) throws Exception{
-		
-		File folder = new File(targetFolder);
-		if(!folder.exists()) {
-			folder.mkdir();
-		}
-		
-		File donwnloadLinks = new File(targetFolder + seriesShort + "_OpenloadLinks.html");
-		Writer writerHtml = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(donwnloadLinks), "UTF-8"));
-
-		File renameHelper = new File(targetFolder + seriesShort + "_renameHelper.bat");
-		Writer writerRename = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(renameHelper), "UTF-8"));
-		
-		for(String openloadUrl : openloadUrls.keySet()){
-		
-			String episodeNumber = openloadUrls.get(openloadUrl);
-			String paddedEpisodeNumber = String.format("%02d", Integer.parseInt(episodeNumber));
-			writerHtml.write("<a href='" + openloadUrl + "' target='_blank'>" + seriesShort + "_" + episodeNumber + "</a><br>\r\n");
-			writerRename.write("ren \"" + seriesFileId + "_" + episodeNumber + ".mp4\" \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
-		}
-		writerHtml.close();
-		writerRename.write("del " + seriesShort + "_OpenloadLinks.html\r\n");
-		writerRename.write("pause\r\n");
-		writerRename.write("del " + seriesShort + "_renameHelper.bat\r\n");
-		writerRename.close();
-
-	}
-	
 }
