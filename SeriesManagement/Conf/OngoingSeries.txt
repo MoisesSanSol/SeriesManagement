@@ -10,10 +10,12 @@
 #1612/yuuki-yuuna-wa-yusha-de-aru=Yuuki Yuuna wa Yuusha de Aru
 #2501/mahoutsukai-no-yome-hoshi-matsu-hito=Mahoutsukai no Yome- Hoshi Matsu Hito
 #2223/komori-san-wa-kotowarenai=Komori-san wa Kotowarenai!
-
-### Completed being downloaded
 #2040/okusama-ga-seito-kaichou=Okusama ga Seito Kaichou!
 #3376/ore-monogatari=Ore Monogatari!!
+
+### Completed being downloaded
+
+3545/little-busters=Little Busters!
 
 ### Currently ignored
 
