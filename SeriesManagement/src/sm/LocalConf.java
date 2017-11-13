@@ -36,12 +36,12 @@ public class LocalConf {
 			input = new FileInputStream("Conf/LocalConfiguration.properties");
 
 			prop.load(input);
-
+			
+			// Folders
 			String ongoingSeriesFolderPath = prop.getProperty("ongoingSeriesFolder");
 			this.ongoingSeriesFolder = new File(ongoingSeriesFolderPath);
 			String downloadTargetFolderPath = prop.getProperty("downloadTargetFolder");
 			this.downloadTargetFolder = new File(downloadTargetFolderPath);
-
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
@@ -52,6 +52,13 @@ public class LocalConf {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	public void checkFolderExistence(File folder){
+		if(!folder.exists()){
+			folder.mkdir();
+			Audit.getInstance().addLog(folder + " did not exist. New folder created.");
 		}
 	}
 	

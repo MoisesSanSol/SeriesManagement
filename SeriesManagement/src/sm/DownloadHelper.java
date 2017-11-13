@@ -30,7 +30,7 @@ public class DownloadHelper {
 	public static void downloadHelpForOpenload(HashMap<String,String> openloadUrls, String seriesShort, String seriesFileId, String targetFolderPath) throws Exception{
 		
 		LocalConf conf = LocalConf.getInstance();
-		String localSeriesFolderPath = conf.downloadTargetFolder.getAbsolutePath() + "/Movies/";
+		String localSeriesFolderPath = conf.downloadTargetFolder.getAbsolutePath() + "/";
 		
 		File donwnloadLinks = new File(localSeriesFolderPath + seriesShort + "_OpenloadLinks.html");
 		Writer writerHtml = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(donwnloadLinks), "UTF-8"));

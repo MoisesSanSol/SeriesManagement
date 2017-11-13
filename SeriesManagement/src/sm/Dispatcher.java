@@ -76,6 +76,8 @@ public class Dispatcher {
 		
 		LocalConf conf = LocalConf.getInstance();
 		
+		conf.checkFolderExistence(conf.downloadTargetFolder);
+		
 		String seriesShort = seriesId.split("/")[1];
 		
 		String mainSeriesPageUrl = LocalConf.animeFlvSeriesMainPageBaseUrl + seriesId;
@@ -104,9 +106,9 @@ public class Dispatcher {
 			if(!targetFile.exists()){
 				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
 				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
-				String fileUrl = WebScrapper.getFileUrlFromZippyshareV2(zippyUrl);
+				String fileUrl = WebScrapper.getFileUrlFromZippyshareV3(zippyUrl);
 				if(!fileUrl.equals("NotFound")){
-					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/Movies/" + seriesShort + "_" + episodeNumber + ".mp4");
+					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/" + seriesShort + "_" + episodeNumber + ".mp4");
 					DownloadHelper.downloadVideo(fileUrl, localTargetFile);
 					if(localTargetFile.length() < 100000) {
 						Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber + " has size: " + localTargetFile.length() + ", it is probably broken. Not copying it.");

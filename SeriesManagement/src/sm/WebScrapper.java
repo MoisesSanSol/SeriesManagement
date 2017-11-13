@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -88,6 +91,50 @@ public class WebScrapper {
 	            }
 	            else {
 	            	System.out.println("Error building url");
+	            }
+	        }
+	        else {
+	        	System.out.println("Error building url");
+	        }
+		}
+        return fileUrl;
+	}
+	
+public static String getFileUrlFromZippyshareV3(String url) throws Exception{
+		
+		String fileUrl = "NotFound";
+
+		String urlBase = url.replaceAll("\\.com\\/.+", ".com");
+		System.out.println("Scrapping page: " + url);
+		
+		Document doc = Jsoup.connect(url).maxBodySize(0).get();	
+
+		if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
+			System.out.println("File not available anymore.");
+		}
+		else{
+			Element downloadAnchor = doc.select("a#dlbutton").first(); 
+			Element javascript = downloadAnchor.nextElementSibling();
+			
+			String[] lines =  javascript.html().split("\n");
+			
+	        String pattern = "document\\.getElementById\\('dlbutton'\\)\\.href = (.+)";
+	        Pattern p = Pattern.compile(pattern);
+	        Matcher m = p.matcher(lines[0]);
+	
+	        if (m.find()) {
+	        	
+	            ScriptEngineManager manager = new ScriptEngineManager();
+	            ScriptEngine se = manager.getEngineByName("JavaScript");        
+	            
+	            try {
+	                Object result = se.eval(m.group(1));
+	                System.out.println(result.toString());
+	            	fileUrl = urlBase + result.toString();
+	            	System.out.println("File url from Zippyshare: " + fileUrl);
+	            	
+	            } catch (Exception e) {
+		        	System.out.println("Error building url");
 	            }
 	        }
 	        else {
