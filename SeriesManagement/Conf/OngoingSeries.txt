@@ -12,10 +12,11 @@
 #2223/komori-san-wa-kotowarenai=Komori-san wa Kotowarenai!
 #2040/okusama-ga-seito-kaichou=Okusama ga Seito Kaichou!
 #3376/ore-monogatari=Ore Monogatari!!
+#3545/little-busters=Little Busters!
 
 ### Completed being downloaded
 
-3545/little-busters=Little Busters!
+589/the-idolmster=The idolmaster
 
 ### Currently ignored
 
