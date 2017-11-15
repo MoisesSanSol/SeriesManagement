@@ -8,8 +8,11 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
@@ -38,9 +41,12 @@ public class DownloadHelper {
 		File renameHelper = new File(localSeriesFolderPath + seriesShort + "_renameHelper.bat");
 		Writer writerRename = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(renameHelper), "UTF-8"));
 		
-		for(String openloadUrl : openloadUrls.keySet()){
+		List<String> keys = new ArrayList<String>(openloadUrls.keySet());
+		Collections.sort(keys);
 		
-			String episodeNumber = openloadUrls.get(openloadUrl);
+		for(String episodeNumber : keys){
+		
+			String openloadUrl = openloadUrls.get(episodeNumber);
 			String paddedEpisodeNumber = String.format("%02d", Integer.parseInt(episodeNumber));
 			writerHtml.write("<a href='" + openloadUrl + "' target='_blank'>" + seriesShort + "_" + episodeNumber + "</a><br>\r\n");
 			writerRename.write("ren \"" + seriesFileId + "_" + episodeNumber + ".mp4\" \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");

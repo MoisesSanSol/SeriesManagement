@@ -121,7 +121,7 @@ public class Dispatcher {
 				else{
 					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
 					System.out.println("Alternative download: " + openloadUrl);
-					failedDownloads.put(openloadUrl, episodeNumberRaw);
+					failedDownloads.put(episodeNumberRaw, openloadUrl);
 					Audit.getInstance().addLog("No Zippyshare for new " + targetFolder + " Episode: " + episodeNumber);
 				}
 			}
