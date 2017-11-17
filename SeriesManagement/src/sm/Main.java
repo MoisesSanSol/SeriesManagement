@@ -6,9 +6,10 @@ public class Main {
 
 		System.out.println("*** Starting ***\n");
 		
-		//Dispatcher.downloadAllEpisodes("", "");
-		Dispatcher.downloadAllOngoingSeries();
+		//LocalConf.getInstance().updateEpisodeTrackingFile_ManuallyAddedFiles();
 		
+		Dispatcher.downloadAllOngoingSeriesV2();
+				
 		Audit.getInstance().dump();
 		
 		System.out.println("*** Finished ***");

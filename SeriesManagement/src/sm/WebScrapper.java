@@ -144,7 +144,9 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
         return fileUrl;
 	}
 	
-	public static ArrayList<String> getAllEpisodesUrls(Document mainSeriesPage){
+	public static ArrayList<String> getAllEpisodesUrls(Document mainSeriesPage) throws Exception{
+		
+		LocalConf conf = LocalConf.getInstance();
 		
 		ArrayList<String> episodeLinks = new ArrayList<String>();
 		
@@ -154,7 +156,7 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 
 			String realtiveLinkUrl = link.select("a").first().attr("href");
 			if(!realtiveLinkUrl.equals("#")){
-				String linkUrl = LocalConf.animeFlvBaseUrl + realtiveLinkUrl;
+				String linkUrl = conf.animeFlvBaseUrl + realtiveLinkUrl;
 				episodeLinks.add(linkUrl);
 				//System.out.println(link.outerHtml());
 			}

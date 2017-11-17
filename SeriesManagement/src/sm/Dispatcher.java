@@ -15,6 +15,100 @@ import org.jsoup.nodes.Document;
 
 public class Dispatcher {
 
+	public static void downloadAllOngoingSeriesV2() throws Exception{
+		
+		System.out.println("*** Download All Ongoing Series V2***\n");
+		
+		Properties prop = new Properties();
+		InputStream input = new FileInputStream("Conf/OngoingSeries.txt");
+
+		prop.load(input);
+
+		Enumeration<?> allSeries = prop.propertyNames();
+		
+		while (allSeries.hasMoreElements()) {
+			
+			String key = (String) allSeries.nextElement();
+			String value = prop.getProperty(key);
+			Dispatcher.downloadOngoingSeriesV2(key, value);
+			
+			System.out.println("");
+		}
+		
+		LocalConf.getInstance().updateEpisodeTrackingFile();
+	}
+	
+	public static void downloadOngoingSeriesV2(String seriesId, String targetFolder) throws Exception{
+		
+		System.out.println("** Download Ongoing Series");
+		System.out.println("* Series Id: " + seriesId);
+		System.out.println("* Target Folder: " + targetFolder);
+		System.out.println();
+		
+		LocalConf conf = LocalConf.getInstance();
+		HashMap<String,String> failedDownloads = new HashMap<String,String>();
+		
+		String seriesShort = seriesId.split("/")[1];
+		
+		String mainSeriesPageUrl = conf.animeFlvSeriesMainPageBaseUrl + seriesId;
+		
+		Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
+		ArrayList<String> episodesUrls = WebScrapper.getAllEpisodesUrls(mainSeriesPage);
+		
+		String seriesStatus = WebScrapper.getSeriesStatus(mainSeriesPage);
+		if(seriesStatus.equals("Finalizado")){
+			Audit.getInstance().addLog(targetFolder + " status: " + seriesStatus);
+		}
+		
+		File seriesFolder = new File(conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/");
+		conf.checkFolderExistence(seriesFolder);
+		
+		ArrayList<String> episodes = conf.episodeTracking.get(seriesShort);
+		
+		for(String episodeUrl : episodesUrls){
+			System.out.println(episodeUrl);
+			
+			String episodeNumberRaw = episodeUrl.replaceAll(".+-", "") ;
+			String episodeNumber = String.format("%02d", Integer.parseInt(episodeNumberRaw));
+			
+			if(!episodes.contains(episodeNumber)){
+			
+				File targetFile = new File(conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/" + seriesShort + "_" + episodeNumber + ".mp4");
+			
+				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
+				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
+				String fileUrl = WebScrapper.getFileUrlFromZippyshareV3(zippyUrl);
+				if(!fileUrl.equals("NotFound")){
+					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/" + seriesShort + "_" + episodeNumber + ".mp4");
+					DownloadHelper.downloadVideo(fileUrl, localTargetFile);
+					if(localTargetFile.length() < 100000) {
+						Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber + " has size: " + localTargetFile.length() + ", it is probably broken. Not copying it.");
+					}
+					else {
+						FileUtils.copyFile(localTargetFile, targetFile);
+						episodes.add(episodeNumber);
+						Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber);
+					}
+				}
+				else{
+					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
+					System.out.println("Alternative download: " + openloadUrl);
+					failedDownloads.put(episodeNumberRaw, openloadUrl);
+					Audit.getInstance().addLog("No Zippyshare for new " + targetFolder + " Episode: " + episodeNumber);
+				}
+			}
+			else{
+				System.out.println("*** Episode Exists ***: " + episodeNumber);
+			}
+		}
+		
+		if(!failedDownloads.isEmpty()){
+			String seriesFileId = WebScrapper.getSeriesId(mainSeriesPage);
+			String targetFolderPath = conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/";
+			DownloadHelper.downloadHelpForOpenload(failedDownloads, seriesShort, seriesFileId, targetFolderPath);
+		}
+	}
+	
 	public static void downloadAllEpisodes(String seriesId, String targetFolder) throws Exception{
 		
 		System.out.println("*** Download All Episodes ***");
@@ -26,7 +120,7 @@ public class Dispatcher {
 		
 		String seriesShort = seriesId.split("/")[1];
 		
-		String mainSeriesPageUrl = LocalConf.animeFlvSeriesMainPageBaseUrl + seriesId;
+		String mainSeriesPageUrl = conf.animeFlvSeriesMainPageBaseUrl + seriesId;
 		
 		Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
 		ArrayList<String> episodesUrls = WebScrapper.getAllEpisodesUrls(mainSeriesPage);
@@ -80,7 +174,7 @@ public class Dispatcher {
 		
 		String seriesShort = seriesId.split("/")[1];
 		
-		String mainSeriesPageUrl = LocalConf.animeFlvSeriesMainPageBaseUrl + seriesId;
+		String mainSeriesPageUrl = conf.animeFlvSeriesMainPageBaseUrl + seriesId;
 		
 		Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
 		ArrayList<String> episodesUrls = WebScrapper.getAllEpisodesUrls(mainSeriesPage);
@@ -157,28 +251,4 @@ public class Dispatcher {
 			System.out.println("");
 		}
 	}
-
-	public static void checkAllOngoingSeriesStatus() throws Exception{
-		
-		System.out.println("*** Check All Ongoing Series Status***\n");
-		
-		Properties prop = new Properties();
-		InputStream input = new FileInputStream("Conf/OngoingSeries.txt");
-
-		prop.load(input);
-
-		Enumeration<?> allSeries = prop.propertyNames();
-		
-		while (allSeries.hasMoreElements()) {
-			
-			String key = (String) allSeries.nextElement();
-			String value = prop.getProperty(key);
-			String mainSeriesPageUrl = LocalConf.animeFlvSeriesMainPageBaseUrl + key;
-			Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
-			String status = WebScrapper.getSeriesStatus(mainSeriesPage);
-			System.out.println(value + ": " + status);
-		}
-		
-	}
-	
 }
