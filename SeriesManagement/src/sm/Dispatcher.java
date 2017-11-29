@@ -15,22 +15,16 @@ import org.jsoup.nodes.Document;
 
 public class Dispatcher {
 
-	public static void downloadAllOngoingSeriesV2() throws Exception{
+	public static void downloadAllOngoingSeries() throws Exception{
 		
 		System.out.println("*** Download All Ongoing Series V2***\n");
 		
-		Properties prop = new Properties();
-		InputStream input = new FileInputStream("Conf/OngoingSeries.txt");
-
-		prop.load(input);
-
-		Enumeration<?> allSeries = prop.propertyNames();
+		LocalConf conf = LocalConf.getInstance();
 		
-		while (allSeries.hasMoreElements()) {
+		for(String series : conf.ongoingSeries.keySet()) {
 			
-			String key = (String) allSeries.nextElement();
-			String value = prop.getProperty(key);
-			Dispatcher.downloadOngoingSeriesV2(key, value);
+			String folder = conf.ongoingSeries.get(series);
+			Dispatcher.downloadOngoingSeries(series, folder);
 			
 			System.out.println("");
 		}
@@ -71,7 +65,7 @@ public class Dispatcher {
 			String episodeNumberRaw = episodeUrl.replaceAll(".+-", "") ;
 			String episodeNumber = String.format("%02d", Integer.parseInt(episodeNumberRaw));
 			
-			if(!episodes.contains(episodeNumber)){
+			if(!episodes.contains(episodeNumber) && Integer.parseInt(episodeNumber) <= conf.episodeCap){
 			
 				File targetFile = new File(conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/" + seriesShort + "_" + episodeNumber + ".mp4");
 			
@@ -228,27 +222,6 @@ public class Dispatcher {
 			String seriesFileId = WebScrapper.getSeriesId(mainSeriesPage);
 			String targetFolderPath = conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/";
 			DownloadHelper.downloadHelpForOpenload(failedDownloads, seriesShort, seriesFileId, targetFolderPath);
-		}
-	}
-	
-	public static void downloadAllOngoingSeries() throws Exception{
-		
-		System.out.println("*** Download All Ongoing Series ***\n");
-		
-		Properties prop = new Properties();
-		InputStream input = new FileInputStream("Conf/OngoingSeries.txt");
-
-		prop.load(input);
-
-		Enumeration<?> allSeries = prop.propertyNames();
-		
-		while (allSeries.hasMoreElements()) {
-			
-			String key = (String) allSeries.nextElement();
-			String value = prop.getProperty(key);
-			Dispatcher.downloadOngoingSeries(key, value);
-			
-			System.out.println("");
 		}
 	}
 }

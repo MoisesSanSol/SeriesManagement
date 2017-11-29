@@ -161,6 +161,19 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 				//System.out.println(link.outerHtml());
 			}
 		}
+
+		// Try old AFLV list css
+		if(episodeLinks.isEmpty()){
+			links = mainSeriesPage.select("a.fa-play-circle");
+			for(Element link : links){
+				String realtiveLinkUrl = link.attr("href");
+				if(!realtiveLinkUrl.equals("#")){
+					String linkUrl = conf.animeFlvBaseUrl + realtiveLinkUrl;
+					episodeLinks.add(linkUrl);
+					//System.out.println(link.outerHtml());
+				}
+			}
+		}
 		
 		Collections.sort(episodeLinks);
 		
