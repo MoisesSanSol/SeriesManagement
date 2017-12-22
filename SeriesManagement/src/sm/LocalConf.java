@@ -192,7 +192,7 @@ public class LocalConf {
 	
 	public void updateEpisodeTrackingFile_ManuallyAddedFiles() throws Exception{
 		
-		System.out.println("*** Update Episode Tracking File : Manually Added Files");
+		System.out.println("** Update Episode Tracking File : Manually Added Files");
 		
 		LocalConf conf = LocalConf.getInstance();
 		
@@ -209,15 +209,23 @@ public class LocalConf {
 			
 			ArrayList<String> episodes = conf.episodeTracking.get(seriesShort);
 			
+			if(episodes == null){
+				System.out.println("* Found series without tracking: " + seriesShort);
+				Audit.getInstance().addLog("* Found series without tracking: " + seriesShort);
+				episodes = new ArrayList<String>();
+				episodeTracking.put(seriesShort, episodes);
+			}
+			
 			for(File episodeFile : seriesFolder.listFiles()){
 				
 				String episodeNumber = episodeFile.getName().replaceAll(".+_(\\d+).mp4", "$1");
+				System.out.println("* Found episode: " + episodeNumber);
 				
 				if(!episodes.contains(episodeNumber)){
+					System.out.println("* Missing Episode: " + episodeNumber);
+					Audit.getInstance().addLog("* Missing Episode: " + episodeNumber);
 					episodes.add(episodeNumber);
 				}
-				
-				System.out.println(episodeNumber);
 			}
 			
 			episodeTracking.put(seriesShort, episodes);

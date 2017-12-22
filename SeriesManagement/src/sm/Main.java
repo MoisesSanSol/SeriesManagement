@@ -6,12 +6,18 @@ public class Main {
 
 		System.out.println("*** Starting ***\n");
 
-		//LocalConf.getInstance().updateEpisodeTrackingFile_FromScratch();
-		//LocalConf.getInstance().updateEpisodeTrackingFile_ManuallyAddedFiles();
-		
-		Dispatcher.downloadAllOngoingSeries();
-				
-		Audit.getInstance().dump();
+		try{
+			//LocalConf.getInstance().updateEpisodeTrackingFile_FromScratch();
+			//LocalConf.getInstance().updateEpisodeTrackingFile_ManuallyAddedFiles();
+			
+			Dispatcher.downloadAllOngoingSeries();
+			
+			Audit.getInstance().dump();
+		}
+		catch(Exception any){
+			Audit.getInstance().dump();
+			throw any;
+		}
 		
 		System.out.println("*** Finished ***");
 	}
