@@ -43,3 +43,7 @@
 ### Actually Ongoing
 
 4886/mahoutsukai-no-yome=Mahoutsukai no Yome
+5004/yuru-camp=Yuru Camp
+5017/mitsuboshi-colors=Mitsuboshi Colors
+5013/slow-start=Slow Start
+

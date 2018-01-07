@@ -68,12 +68,12 @@ public class LocalConf {
 			String downloadTargetFolderPath = localConf.getProperty("downloadTargetFolder");
 			this.downloadTargetFolder = new File(downloadTargetFolderPath);
 			this.checkFolderExistence(this.downloadTargetFolder);
+
+			// Ongoing Series
+			this.loadOngoingSeries();
 			
 			// Episode Tracking
 			this.loadEpisodeTracking();
-			
-			// Ongoing Series
-			this.loadOngoingSeries();
 			
 			// Others
 			String episodeCapStr = localConf.getProperty("episodeCap");
@@ -117,6 +117,15 @@ public class LocalConf {
 				}
 				this.episodeTracking.put(series, episodes);
 			}
+			
+			for(String series : this.ongoingSeries.keySet()) {
+				String seriesShort = series.split("/")[1];
+				if(this.episodeTracking.get(seriesShort) == null){
+					ArrayList<String> episodes = new ArrayList<String>();
+					this.episodeTracking.put(seriesShort, episodes);
+				}
+			}
+			
 		}
 		catch (IOException ex) {
 			ex.printStackTrace();
