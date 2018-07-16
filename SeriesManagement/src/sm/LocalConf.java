@@ -19,27 +19,29 @@ public class LocalConf {
 	public String animeFlvSeriesMainPageBaseUrl = "https://animeflv.net/anime/";
 	
 	// Configuration file
-	public String localConfFile = "LocalConfiguration.properties";
+	public String localConfFileName = "LocalConfiguration.properties";
 	
 	// Episode tracking file
-	public String ongoingSeriesFile = "OngoingSeries.txt";
-	public String episodeTrackingFile = "OngoingProgress.properties";
+	public String ongoingSeriesFileName = "OngoingSeries.txt";
+	public String episodeTrackingFileName = "OngoingProgress.txt";
 
 	// Folders
+	public String ongoingSeriesFolderPath;
+	public String downloadTargetFolderPath;
 	public File ongoingSeriesFolder;
 	public File downloadTargetFolder;
 	
 	// Items and others
 	public HashMap<String,String> ongoingSeries; 
 	public HashMap<String,ArrayList<String>> episodeTracking; 
-	public int episodeCap;
+	public int episodeCap = 99;
 	
 	// Singleton instance
 	private static LocalConf instance;
 	
 
 	private LocalConf() throws Exception{
-		this.loadLocalConfiguration();
+		this.loadLocalConfiguration_Ongoing();
 	}
 	
 	public static LocalConf getInstance() throws Exception{
@@ -47,6 +49,46 @@ public class LocalConf {
           instance = new LocalConf();
        }
        return instance;
+	}
+	
+	public void loadLocalConfiguration_Ongoing() throws Exception{
+
+		InputStream localConfInput = null;
+		
+		try {
+
+			// Folders
+			Properties localConf = new Properties();
+			
+			String localConfFilePath = "Conf/" + this.localConfFileName;
+			localConfInput = new FileInputStream(localConfFilePath);
+
+			localConf.load(localConfInput);
+			
+			this.ongoingSeriesFolderPath = localConf.getProperty("ongoingSeriesFolder");
+			this.ongoingSeriesFolder = new File(ongoingSeriesFolderPath);
+			this.downloadTargetFolderPath = localConf.getProperty("downloadTargetFolder");
+			this.downloadTargetFolder = new File(downloadTargetFolderPath);
+			
+			this.checkFolderExistence(this.downloadTargetFolder);
+
+			// Ongoing Series
+			this.loadOngoingSeries();
+			
+			// Episode Tracking
+			this.loadEpisodeTracking();
+			
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (localConfInput != null) {
+				try {
+					localConfInput.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	public void loadLocalConfiguration() throws Exception{
@@ -58,7 +100,7 @@ public class LocalConf {
 			// Folders
 			Properties localConf = new Properties();
 			
-			String localConfFilePath = "Conf/" + this.localConfFile;
+			String localConfFilePath = "Conf/" + this.localConfFileName;
 			localConfInput = new FileInputStream(localConfFilePath);
 
 			localConf.load(localConfInput);
@@ -92,7 +134,28 @@ public class LocalConf {
 		}
 	}
 	
-	private void loadEpisodeTracking(){
+	private void loadEpisodeTracking() throws Exception{
+		
+		this.episodeTracking = new HashMap<String,ArrayList<String>>();
+		
+		for(String series : this.ongoingSeries.keySet()) {
+			
+			ArrayList<String> episodeNumbers = new ArrayList<String>();
+			
+			String seriesFolderPath = this.ongoingSeriesFolderPath + this.ongoingSeries.get(series);
+			File seriesFolder = new File(seriesFolderPath);
+			this.checkFolderExistence(seriesFolder);
+			for (File episodeFile : seriesFolder.listFiles()) {
+				String episodeNumberStr = episodeFile.getName().replaceAll(".+_(\\d+).mp4", "$1");
+				episodeNumbers.add(episodeNumberStr);
+			}
+			
+			this.episodeTracking.put(series, episodeNumbers);
+		}
+		
+	}
+	
+	private void loadEpisodeTracking_File(){
 		
 		InputStream episodeTrackingInput = null;
 		
@@ -100,30 +163,21 @@ public class LocalConf {
 		
 			Properties episodeTrackingProps = new Properties();
 			
-			String episodeTrackingFilePath = this.ongoingSeriesFolder.getPath() + "\\" + this.episodeTrackingFile;
+			String episodeTrackingFilePath = this.ongoingSeriesFolder.getPath() + "\\" + this.episodeTrackingFileName;
 			episodeTrackingInput = new FileInputStream(episodeTrackingFilePath);
 	
 			episodeTrackingProps.load(episodeTrackingInput);
 	
 			this.episodeTracking = new HashMap<String,ArrayList<String>>();
 			
-			for(Object seriesObj : episodeTrackingProps.keySet()){
-				String series = (String)seriesObj;
-				String serializedEpisodes = episodeTrackingProps.getProperty(series);
+			for(String series : this.ongoingSeries.keySet()) {
 				ArrayList<String> episodes = new ArrayList<String>();
-				if(!serializedEpisodes.equals("None Yet")){
+				if(episodeTrackingProps.get(series) != null){
+					String serializedEpisodes = episodeTrackingProps.getProperty(series);
 					String[] episodesArray = serializedEpisodes.split(",");
 					episodes.addAll(Arrays.asList(episodesArray));
 				}
 				this.episodeTracking.put(series, episodes);
-			}
-			
-			for(String series : this.ongoingSeries.keySet()) {
-				String seriesShort = series.split("/")[1];
-				if(this.episodeTracking.get(seriesShort) == null){
-					ArrayList<String> episodes = new ArrayList<String>();
-					this.episodeTracking.put(seriesShort, episodes);
-				}
 			}
 			
 		}
@@ -148,7 +202,7 @@ public class LocalConf {
 		
 			Properties ongoingSeriesProps = new Properties();
 			
-			String ongoingSeriesFilePath = "Conf/" + this.ongoingSeriesFile;
+			String ongoingSeriesFilePath = this.ongoingSeriesFolderPath + this.ongoingSeriesFileName;
 			ongoingSeriesInput = new FileInputStream(ongoingSeriesFilePath);
 
 			ongoingSeriesProps.load(ongoingSeriesInput);
@@ -192,11 +246,10 @@ public class LocalConf {
 			prop.setProperty(series, serializedEpisodes);
 		}
 		
-		String episodeTrackingFilePath = this.ongoingSeriesFolder.getAbsolutePath() + "\\" + this.episodeTrackingFile;
+		String episodeTrackingFilePath = this.ongoingSeriesFolder.getAbsolutePath() + "\\" + this.episodeTrackingFileName;
 		FileOutputStream output = new FileOutputStream(episodeTrackingFilePath);
 		prop.store(output, null);
 		output.close();
-		
 	}
 	
 	public void updateEpisodeTrackingFile_ManuallyAddedFiles() throws Exception{
@@ -249,13 +302,11 @@ public class LocalConf {
 	
 	public void updateEpisodeTrackingFile_FromScratch() throws Exception{
 		
-		System.out.println("** Update Episode Tracking File : From Scratch");
-		
-		LocalConf conf = LocalConf.getInstance();
+		/*System.out.println("** Update Episode Tracking File : From Scratch");
 		
 		HashMap<String,ArrayList<String>> episodeTracking = new HashMap<String,ArrayList<String>>();
 		
-		for(String series : conf.ongoingSeries.keySet()) {
+		for(String series : this.ongoingSeries.keySet()) {
 
 			System.out.println("* Series: " + series);
 			
@@ -293,6 +344,41 @@ public class LocalConf {
 		}
 		
 		conf.episodeTracking = episodeTracking;
-		conf.updateEpisodeTrackingFile();
+		conf.updateEpisodeTrackingFile();*/
 	}
+	
+	public static void createOngoingFolders() throws Exception{
+		
+		System.out.println("** Update Episode Tracking File : From Scratch");
+		
+		LocalConf conf = LocalConf.getInstance();
+		
+		for(String series : conf.ongoingSeries.keySet()) {
+
+			System.out.println("* Series: " + series);
+			
+			String folder = conf.ongoingSeries.get(series);
+
+			String seriesFolderPath = conf.ongoingSeriesFolder.getAbsolutePath() + "/" + folder + "/";
+			File seriesFolder = new File(seriesFolderPath);
+			
+			conf.checkFolderExistence(seriesFolder);
+			
+			for(File episodeFile : conf.ongoingSeriesFolder.listFiles()){
+
+				if(episodeFile.getName().contains(series)) {
+					File newEpisodeFile = new File(seriesFolderPath + episodeFile.getName());
+					
+					episodeFile.renameTo(newEpisodeFile);
+				}
+
+			}
+			
+			
+
+		}
+		
+		
+	}
+	
 }

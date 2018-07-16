@@ -42,6 +42,8 @@ public class Dispatcher {
 		String mainSeriesPageUrl = conf.animeFlvSeriesMainPageBaseUrl + seriesId;
 		
 		Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
+		//System.out.println(mainSeriesPage.html());
+		
 		ArrayList<String> episodesUrls = WebScrapper.getAllEpisodesUrls(mainSeriesPage);
 		
 		String seriesStatus = WebScrapper.getSeriesStatus(mainSeriesPage);
@@ -52,13 +54,46 @@ public class Dispatcher {
 		File seriesFolder = new File(conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/");
 		conf.checkFolderExistence(seriesFolder);
 		
-		ArrayList<String> episodes = conf.episodeTracking.get(seriesShort);
+		ArrayList<String> episodes = conf.episodeTracking.get(seriesId);
 		
 		for(String episodeUrl : episodesUrls){
 			System.out.println(episodeUrl);
 			
 			String episodeNumberRaw = episodeUrl.replaceAll(".+-", "") ;
-			String episodeNumber = String.format("%02d", Integer.parseInt(episodeNumberRaw));
+			
+			String episodeNumber = "999";
+			
+			try {
+				episodeNumber = String.format("%02d", Integer.parseInt(episodeNumberRaw));
+			}
+			catch(NumberFormatException ex) {
+				ex.printStackTrace();
+				Audit.getInstance().addLog("Episode Number Error: " + episodeNumberRaw + ", Forced Download: " + episodeUrl);
+				episodeNumber = episodeNumberRaw;
+				File targetFile = new File(conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/" + seriesShort + "_" + episodeNumber + ".mp4");
+				
+				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
+				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
+				String fileUrl = WebScrapper.getFileUrlFromZippyshareV3(zippyUrl);
+				if(!fileUrl.equals("NotFound")){
+					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/" + seriesShort + "_" + episodeNumber + ".mp4");
+					DownloadHelper.downloadVideo(fileUrl, localTargetFile);
+					if(localTargetFile.length() < 100000) {
+						Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber + " has size: " + localTargetFile.length() + ", it is probably broken. Not copying it.");
+					}
+					else {
+						FileUtils.copyFile(localTargetFile, targetFile);
+						episodes.add(episodeNumber);
+						Audit.getInstance().addLog("New " + targetFolder + " Episode: " + episodeNumber);
+					}
+				}
+				else{
+					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
+					System.out.println("Alternative download: " + openloadUrl);
+					failedDownloads.put(episodeNumberRaw, openloadUrl);
+					Audit.getInstance().addLog("No Zippyshare for new " + targetFolder + " Episode: " + episodeNumber);
+				}
+			}
 			
 			if(!episodes.contains(episodeNumber) && Integer.parseInt(episodeNumber) <= conf.episodeCap){
 			

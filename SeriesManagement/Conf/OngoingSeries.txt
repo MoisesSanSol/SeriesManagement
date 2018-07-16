@@ -1,49 +1,14 @@
-### Past series
-
-#4778/centaur-no-nayami=Centaur no Nayami
-#4767/made-in-abyss=Made in Abyss
-#4719/senki-zesshou-symphogear-axz=Senki Zesshou Symphogear AXZ
-#3692/boku-no-hero-academia-2nd-season=Boku no Hero Academia 2nd Season
-#4747/isekai-shokudou=Isekai Shokudou
-#4783/new-game2=New Game!!
-#4793/gamers=Gamers!
-#1612/yuuki-yuuna-wa-yusha-de-aru=Yuuki Yuuna wa Yuusha de Aru
-#2501/mahoutsukai-no-yome-hoshi-matsu-hito=Mahoutsukai no Yome- Hoshi Matsu Hito
-#2223/komori-san-wa-kotowarenai=Komori-san wa Kotowarenai!
-#2040/okusama-ga-seito-kaichou=Okusama ga Seito Kaichou!
-#3376/ore-monogatari=Ore Monogatari!!
-#3545/little-busters=Little Busters!
-#589/the-idolmster=The idolmaster
-#4704/hina-logi-from-luck-logic=Hina Logi_ From Luck & Logic
-#3352/tengen-toppa=Tengen Toppa Gurren Lagann
-#4861/juuni-taisen=Juuni Taisen
-#4860/shokugeki-no-souma-san-no-sara=Shokugeki no Souma San no Sara
-#4902/boku-no-kanojo-ga-majimesugiru-shobitch-na-ken=Boku no Kanojo ga Majimesugiru Sho-bitch na Ken
-#4879/shoujo-shuumatsu-ryokou=Shoujo Shuumatsu Ryokou
-#4897/himouto-umaruchan-r=Himouto! Umaru-chan R
-#4891/kekkai-sensen-beyond=Kekkai Sensen & Beyond
-#4884/blend-s=Blend S
-#4876/kino-no-tabi-the-beautiful-world-the-animated-series=Kino no Tabi_ The Beautiful World - The Animated Series
-#4896/imouto-sae-ireba-ii=Imouto sae Ireba Ii
-#4898/kujira-no-kora-wa-sajou-ni-utau=Kujira no Kora wa Sajou ni Utau
-#4862/osake-wa-fuufu-ni-natte-kara=Osake wa Fuufu ni Natte kara
-
 ### Completed being downloaded
-
-5/fairy-tail=Fairy Tail
 
 ### Currently ignored
 
-#2766/recreators=Re-Creators
-#4717/fateapocrypha=Fate Apocrypha
-#4881/yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou=Yuuki Yuuna wa Yuusha de Aru- Washio Sumi no Shou
-#4858/uq-holder-mahou-sensei-negima-2=UQ Holder!- Mahou Sensei Negima! 2
-#4874/just-because=Just Because
 
 ### Actually Ongoing
 
-4886/mahoutsukai-no-yome=Mahoutsukai no Yome
-5004/yuru-camp=Yuru Camp
-5017/mitsuboshi-colors=Mitsuboshi Colors
-5013/slow-start=Slow Start
+5043/darling-in-the-franxx=Darling in the FranXX
+5096/persona-5-the-animation=Persona 5 the Animation
+5119/boku-no-hero-academia-3rd-season=Boku no Hero Academia 3rd Season
+5078/tachibanakan-triangle=Tachibanakan Triangle
+
+### Past series
 

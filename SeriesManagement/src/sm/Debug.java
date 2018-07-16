@@ -1,16 +1,13 @@
 package sm;
 
-public class Main {
-
+public class Debug {
+	
 	public static void main(String[] args) throws Exception{
 
 		System.out.println("*** Starting ***\n");
 
 		try{
-			
-			Dispatcher.downloadAllOngoingSeries();
-			
-			Audit.getInstance().dump();
+			Debug.test();
 		}
 		catch(Exception any){
 			Audit.getInstance().dump();
@@ -20,4 +17,9 @@ public class Main {
 		System.out.println("*** Finished ***");
 	}
 
+	public static void test() throws Exception{
+		
+		WebScrapper.getFileUrlFromZippyshareV5("http://www103.zippyshare.com/v/sNWhXD86/file.html");
+		
+	}
 }

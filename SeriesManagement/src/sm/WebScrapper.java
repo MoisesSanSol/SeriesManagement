@@ -104,44 +104,102 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 		
 		String fileUrl = "NotFound";
 
+		if(!url.equals("NoZippyshareUrl")) {
+		
+			String urlBase = url.replaceAll("\\.com\\/.+", ".com");
+			System.out.println("Scrapping page: " + url);
+			
+			Document doc = Jsoup.connect(url).maxBodySize(0).get();	
+	
+			if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
+				System.out.println("File not available anymore.");
+			}
+			else{
+				Element downloadAnchor = doc.select("a#dlbutton").first(); 
+				Element javascript = downloadAnchor.nextElementSibling();
+				
+				String[] lines =  javascript.html().split("\n");
+				
+		        String pattern = "document\\.getElementById\\('dlbutton'\\)\\.href = (.+)";
+		        Pattern p = Pattern.compile(pattern);
+		        Matcher m = p.matcher(lines[0]);
+		
+		        if (m.find()) {
+		        	
+		            ScriptEngineManager manager = new ScriptEngineManager();
+		            ScriptEngine se = manager.getEngineByName("JavaScript");        
+		            
+		            try {
+		                Object result = se.eval(m.group(1));
+		                System.out.println(result.toString());
+		            	fileUrl = urlBase + result.toString();
+		            	System.out.println("File url from Zippyshare: " + fileUrl);
+		            	
+		            } catch (Exception e) {
+			        	System.out.println("Error building url");
+		            }
+		        }
+		        else {
+		        	System.out.println("Error building url");
+		        }
+			}
+		}
+		
+        return fileUrl;
+	}
+
+	public static String getFileUrlFromZippyshareV4(String url) throws Exception{
+		
+		String fileUrl = "NotFound";
+	
 		String urlBase = url.replaceAll("\\.com\\/.+", ".com");
 		System.out.println("Scrapping page: " + url);
 		
 		Document doc = Jsoup.connect(url).maxBodySize(0).get();	
-
+	
+		//*
 		if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
 			System.out.println("File not available anymore.");
 		}
 		else{
 			Element downloadAnchor = doc.select("a#dlbutton").first(); 
 			Element javascript = downloadAnchor.nextElementSibling();
+			//System.out.println(javascript.html());
 			
 			String[] lines =  javascript.html().split("\n");
 			
-	        String pattern = "document\\.getElementById\\('dlbutton'\\)\\.href = (.+)";
-	        Pattern p = Pattern.compile(pattern);
-	        Matcher m = p.matcher(lines[0]);
+	        int a;
+	        Pattern patA = Pattern.compile("var a = (\\d+);");
+	        Matcher matA = patA.matcher(lines[0]);
+	        int b = 3;
+	        //Pattern patB = Pattern.compile("var a = (\\d+);");
+	        //Matcher matB = patA.matcher(lines[0]);
 	
-	        if (m.find()) {
+	        if (matA.find()) {
+	           
+	        	a = Integer.parseInt(matA.group(1));
+	        	//System.out.println(a);
 	        	
-	            ScriptEngineManager manager = new ScriptEngineManager();
-	            ScriptEngine se = manager.getEngineByName("JavaScript");        
-	            
-	            try {
-	                Object result = se.eval(m.group(1));
-	                System.out.println(result.toString());
-	            	fileUrl = urlBase + result.toString();
-	            	System.out.println("File url from Zippyshare: " + fileUrl);
+	        	Pattern patUrl = Pattern.compile("document.getElementById\\('dlbutton'\\).href = \"(.+?)\"\\+\\(Math\\.pow\\(a, 3\\)\\+b\\)\\+\"(.+?.mp4)\";");
+	            Matcher matUrl = patUrl.matcher(lines[3]);
+	        	
+	            if (matUrl.find()) {
 	            	
-	            } catch (Exception e) {
-		        	System.out.println("Error building url");
+	            	int dynamicUrl = (int)Math.pow(a, 3) + b;
+	            	
+	            	fileUrl = urlBase + matUrl.group(1) + dynamicUrl + matUrl.group(2);
+	
+	            	System.out.println("File url from Zippyshare: " + fileUrl);
+	            }
+	            else {
+	            	System.out.println("Error building url.");
 	            }
 	        }
 	        else {
-	        	System.out.println("Error building url");
+	        	System.out.println("Error building url.");
 	        }
 		}
-        return fileUrl;
+		return fileUrl;
 	}
 	
 	public static ArrayList<String> getAllEpisodesUrls(Document mainSeriesPage) throws Exception{
@@ -175,6 +233,29 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 			}
 		}
 		
+		// Try new AFLV list css
+		if(episodeLinks.isEmpty()){
+			
+			Elements scripts = mainSeriesPage.select("script");
+			for(Element script : scripts){
+				//System.out.println(script.outerHtml());
+				String html = script.outerHtml();
+				if(html.contains("var episodes ")) {
+					
+					String episodeName = html.split(";")[0].split("\r\n")[1].replaceAll(".+?\\[\".+?\",\".+?\",\"", "").replaceAll("\".+", "");
+					String episodesVar = html.split(";")[1].split("\r\n")[1].replaceAll(".+?\\[\\[", "").replaceAll("\\]\\]", "");
+					String[] episodesPairs = episodesVar.split("\\],\\[");
+					
+					for(String episodePair : episodesPairs){
+						
+						String linkUrl = conf.animeFlvBaseUrl + "/ver/" + episodePair.split(",")[1] + "/" + episodeName + "-" + episodePair.split(",")[0];
+						episodeLinks.add(linkUrl);
+						//System.out.println(linkUrl);
+					}
+				}
+			}
+		}
+		
 		Collections.sort(episodeLinks);
 		
 		return episodeLinks;
@@ -182,11 +263,16 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 	
 	public static String getZippyshareUrl(Document episodePage) throws Exception{
 		
-		String zippyUrl = "";
-		
-		String redirectLink = episodePage.select("a[href*=zippyshare]").first().attr("href");
-		String[] urls = redirectLink.split("=http");
-		zippyUrl = "http" +  URLDecoder.decode(urls[1], "UTF-8");
+		String zippyUrl = "NoZippyshareUrl";
+		try {
+			String redirectLink = episodePage.select("a[href*=zippyshare]").first().attr("href");
+			String[] urls = redirectLink.split("=http");
+			zippyUrl = "http" +  URLDecoder.decode(urls[1], "UTF-8");
+		}
+		catch(Exception ex) {
+			System.out.println("Page " + episodePage.baseUri() + " has no or broken zippyshare link.");
+			Audit.getInstance().addLog("Page " + episodePage.baseUri() + " has no or broken zippyshare link.");
+		}
 		
 		return zippyUrl;
 	}
@@ -220,6 +306,96 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 		seriesStatus = mainSeriesPage.select(".fa-tv").first().text();
 		
 		return seriesStatus;
+	}
+	
+	public static String getFileUrlFromZippyshareV5(String url) throws Exception{
+		
+		String fileUrl = "NotFound";
+	
+		String urlBase = url.replaceAll("\\.com\\/.+", ".com");
+		System.out.println("Scrapping page: " + url);
+		
+		Document doc = Jsoup.connect(url).maxBodySize(0).get();	
+		//System.out.println("html: " + doc.html());
+		
+		if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
+			System.out.println("File not available anymore.");
+		}
+		else if(!doc.select("div:contains(File does not exist on this server)").isEmpty()) {
+			System.out.println("File not available anymore.");
+		}
+		else{
+			Element downloadAnchor = doc.select("a#dlbutton").first();
+			Element omg = downloadAnchor.nextElementSibling();
+			Element javascript = omg.nextElementSibling();
+			//System.out.println(javascript.html());
+			
+			String[] lines =  javascript.html().split("\n");
+
+			String thing = "(\\d+)\\Q%1000 + a() + b() + c() + d + 5/5\\E";
+			Pattern patUrl = Pattern.compile("document.getElementById\\('dlbutton'\\).href = \"(.+?)\"\\+\\(" + thing + "\\)\\+\"(.+?.mp4)\";");
+            Matcher matUrl = patUrl.matcher(lines[5]);
+			
+            if (matUrl.find()) {
+
+	        	int a = Integer.parseInt(matUrl.group(2));
+            	int b = 1 + 2 + 3 + (2*2) + (5/5); 
+            	int dynamicUrl = (a%1000) + b;
+            	
+            	fileUrl = urlBase + matUrl.group(1) + dynamicUrl + matUrl.group(3);
+	
+            	System.out.println("File url from Zippyshare: " + fileUrl);
+	        }
+	        else {
+	        	System.out.println("Error building url.");
+	        }
+		}
+		return fileUrl;
+	}
+
+	public static String getFileUrlFromZippyshareV6(String url) throws Exception{
+		
+		String fileUrl = "NotFound";
+	
+		String urlBase = url.replaceAll("\\.com\\/.+", ".com");
+		System.out.println("Scrapping page: " + url);
+		
+		Document doc = Jsoup.connect(url).maxBodySize(0).get();	
+		//System.out.println("html: " + doc.html());
+		
+		if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
+			System.out.println("File not available anymore.");
+		}
+		else if(!doc.select("div:contains(File does not exist on this server)").isEmpty()) {
+			System.out.println("File not available anymore.");
+		}
+		else{
+			Element downloadAnchor = doc.select("a#dlbutton").first();
+			Element omg = downloadAnchor.nextElementSibling();
+			Element javascript = omg.nextElementSibling();
+			//System.out.println(javascript.html());
+			
+			String[] lines =  javascript.html().split("\n");
+
+			String thing = "(\\d+)\\Q%1000 + a() + b() + c() + d + 5/5\\E";
+			Pattern patUrl = Pattern.compile("document.getElementById\\('dlbutton'\\).href = \"(.+?)\"\\+\\(" + thing + "\\)\\+\"(.+?.mp4)\";");
+            Matcher matUrl = patUrl.matcher(lines[5]);
+			
+            if (matUrl.find()) {
+
+	        	int a = Integer.parseInt(matUrl.group(2));
+            	int b = 1 + 2 + 3 + (2*2) + (5/5); 
+            	int dynamicUrl = (a%1000) + b;
+            	
+            	fileUrl = urlBase + matUrl.group(1) + dynamicUrl + matUrl.group(3);
+	
+            	System.out.println("File url from Zippyshare: " + fileUrl);
+	        }
+	        else {
+	        	System.out.println("Error building url.");
+	        }
+		}
+		return fileUrl;
 	}
 	
 }

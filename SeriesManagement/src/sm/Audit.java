@@ -21,7 +21,7 @@ public class Audit {
    }
    
    public void dump(){
-	   System.out.println("Audit Summary:\n");
+	   System.out.println("\nAudit Summary:\n");
 	   for (String log : logs){
 		   System.out.println(log);
 	   }
