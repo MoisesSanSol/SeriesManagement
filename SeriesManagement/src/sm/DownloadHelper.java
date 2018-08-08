@@ -27,32 +27,35 @@ public class DownloadHelper {
 		
 	}
 	
-	public static void downloadHelpForOpenload(HashMap<String,String> openloadUrls, String seriesShort, String seriesFileId, String targetFolderPath) throws Exception{
+	public static void downloadHelpForAlternatives(HashMap<String,String> alternativeUrls, String seriesShort, String targetFolderPath) throws Exception{
 		
 		LocalConf conf = LocalConf.getInstance();
 		String localSeriesFolderPath = conf.downloadTargetFolder.getAbsolutePath() + "/";
 		
-		File donwnloadLinks = new File(localSeriesFolderPath + seriesShort + "_OpenloadLinks.html");
+		File donwnloadLinks = new File(localSeriesFolderPath + seriesShort + "_AlternativeLinks.html");
 		Writer writerHtml = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(donwnloadLinks), "UTF-8"));
 
 		File renameHelper = new File(localSeriesFolderPath + seriesShort + "_renameHelper.bat");
 		Writer writerRename = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(renameHelper), "UTF-8"));
 		
-		List<String> keys = new ArrayList<String>(openloadUrls.keySet());
+		List<String> keys = new ArrayList<String>(alternativeUrls.keySet());
 		Collections.sort(keys);
 		
-		for(String episodeNumber : keys){
-		
-			String openloadUrl = openloadUrls.get(episodeNumber);
+		for(String episodeNumberAndHost : keys){
+			
+			String seriesFileId = episodeNumberAndHost.split("#")[0];
+			String episodeNumber = episodeNumberAndHost.split("#")[1];
+			String host = episodeNumberAndHost.split("#")[2];
+			String alternativeUrl = alternativeUrls.get(episodeNumberAndHost);
 			String paddedEpisodeNumber = String.format("%02d", Integer.parseInt(episodeNumber));
-			writerHtml.write("<a href='" + openloadUrl + "' target='_blank'>" + seriesShort + "_" + episodeNumber + "</a><br>\r\n");
+			writerHtml.write("<a href='" + alternativeUrl + "' target='_blank'>" + seriesShort + "_" + episodeNumber + " (" + host + ")</a><br>\r\n");
 			writerRename.write("ren \"" + seriesFileId + "_" + episodeNumber + ".mp4\" \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
 			writerRename.write("pause\r\n");
 			writerRename.write("move \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\" \"" + targetFolderPath + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
 			writerRename.write("pause\r\n");
 		}
 		writerHtml.close();
-		writerRename.write("del " + seriesShort + "_OpenloadLinks.html\r\n");
+		writerRename.write("del " + seriesShort + "_AlternativeLinks.html\r\n");
 		writerRename.write("pause\r\n");
 		writerRename.write("del " + seriesShort + "_renameHelper.bat\r\n");
 		writerRename.close();

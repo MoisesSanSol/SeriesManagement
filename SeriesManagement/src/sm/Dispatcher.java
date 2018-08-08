@@ -88,9 +88,7 @@ public class Dispatcher {
 					}
 				}
 				else{
-					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
-					System.out.println("Alternative download: " + openloadUrl);
-					failedDownloads.put(episodeNumberRaw, openloadUrl);
+					Dispatcher.handleNoZippyshareEpisode(episodeNumberRaw, episodePage, failedDownloads);
 					Audit.getInstance().addLog("No Zippyshare for new " + targetFolder + " Episode: " + episodeNumber);
 				}
 			}
@@ -115,9 +113,7 @@ public class Dispatcher {
 					}
 				}
 				else{
-					String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
-					System.out.println("Alternative download: " + openloadUrl);
-					failedDownloads.put(episodeNumberRaw, openloadUrl);
+					Dispatcher.handleNoZippyshareEpisode(episodeNumberRaw, episodePage, failedDownloads);
 					Audit.getInstance().addLog("No Zippyshare for new " + targetFolder + " Episode: " + episodeNumber);
 				}
 			}
@@ -127,9 +123,19 @@ public class Dispatcher {
 		}
 		
 		if(!failedDownloads.isEmpty()){
-			String seriesFileId = WebScrapper.getSeriesId(mainSeriesPage);
+
 			String targetFolderPath = conf.ongoingSeriesFolder.getAbsolutePath() + "/" + targetFolder + "/";
-			DownloadHelper.downloadHelpForOpenload(failedDownloads, seriesShort, seriesFileId, targetFolderPath);
+			DownloadHelper.downloadHelpForAlternatives(failedDownloads, seriesShort, targetFolderPath);
 		}
+	}
+	
+	public static void handleNoZippyshareEpisode(String episodeNumberRaw, Document episodePage, HashMap<String,String> failedDownloads) throws Exception{
+		String episodeFileId = WebScrapper.getSeriesId(episodePage);
+		String openloadUrl = WebScrapper.getOpenloadUrl(episodePage);
+		String megaUrl = WebScrapper.getMegaUrl(episodePage);
+		System.out.println("Alternative Openload download: " + openloadUrl);
+		System.out.println("Alternative Mega download: " + megaUrl);
+		failedDownloads.put(episodeFileId + "#" + episodeNumberRaw + "#openload", openloadUrl);
+		failedDownloads.put(episodeFileId + "#" + episodeNumberRaw + "#mega", megaUrl);
 	}
 }

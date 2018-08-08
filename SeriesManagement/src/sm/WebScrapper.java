@@ -114,6 +114,9 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 			if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
 				System.out.println("File not available anymore.");
 			}
+			if(!doc.select("div:contains(File does not exist on this server)").isEmpty()){
+				System.out.println("File not available anymore.");
+			}
 			else{
 				Element downloadAnchor = doc.select("a#dlbutton").first(); 
 				Element javascript = downloadAnchor.nextElementSibling();
@@ -288,15 +291,15 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 		return openloadUrl;
 	}
 	
-	
-	public static String getSeriesId(Document episodePage) throws Exception{
+	public static String getMegaUrl(Document episodePage) throws Exception{
 		
-		String seriesId = "";
+		String megaUrl = "";
 		
-		String all = episodePage.select("script:containsData(anime_id)").first().html().replace("\r\n", "");
-		seriesId = all.replaceAll(".*?anime_id = (\\d+?);.*$", "$1");
+		String redirectLink = episodePage.select("a[href*=mega]").first().attr("href");
+		String[] urls = redirectLink.split("=http");
+		megaUrl = "http" +  URLDecoder.decode(urls[1], "UTF-8");
 		
-		return seriesId;
+		return megaUrl;
 	}
 	
 	public static String getSeriesStatus(Document mainSeriesPage) throws Exception{
@@ -398,4 +401,13 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 		return fileUrl;
 	}
 	
+	public static String getSeriesId(Document episodePage) throws Exception{
+		
+		String seriesId = "";
+		
+		String all = episodePage.select("script:containsData(anime_id)").first().html().replace("\r\n", "");
+		seriesId = all.replaceAll(".*?anime_id = (\\d+?);.*$", "$1");
+		
+		return seriesId;
+	}
 }
