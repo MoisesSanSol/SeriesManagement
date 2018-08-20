@@ -23,8 +23,6 @@ public class Dispatcher {
 			
 			System.out.println("");
 		}
-		
-		LocalConf.getInstance().updateEpisodeTrackingFile();
 	}
 	
 	public static void downloadOngoingSeries(String seriesId, String targetFolder) throws Exception{
