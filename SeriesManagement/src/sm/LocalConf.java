@@ -37,6 +37,9 @@ public class LocalConf {
 	public File pastSeriesFolder;
 	
 	// Items and others
+	
+	public ArrayList<Series> series;
+	
 	public HashMap<String,String> ongoingSeries; 
 	public HashMap<String,ArrayList<String>> episodeTracking; 
 	public int episodeCap = 99;
@@ -92,6 +95,9 @@ public class LocalConf {
 			
 			// Episode Tracking
 			this.loadEpisodeTracking();
+			
+			// New Ongoing Series structure
+			this.loadSeries();
 			
 			// Others
 			String episodeCapStr = localConf.getProperty("episodeCap");
@@ -199,4 +205,21 @@ public class LocalConf {
 		}
 	}
 	
+	private void loadSeries(){
+		
+		this.series = new ArrayList<Series>();
+		
+		for(String seriesPage : this.ongoingSeries.keySet()){
+			
+			Series series = new Series();
+
+			series.seriesPage = seriesPage;
+			series.seriesName = seriesPage.split("/")[1];
+
+			series.episodesDownloaded = this.episodeTracking.get(seriesPage);	
+			
+			this.series.add(series);
+		}
+		
+	}
 }

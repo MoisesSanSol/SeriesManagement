@@ -136,4 +136,39 @@ public class Dispatcher {
 		failedDownloads.put(episodeFileId + "#" + episodeNumberRaw + "#openload", openloadUrl);
 		failedDownloads.put(episodeFileId + "#" + episodeNumberRaw + "#mega", megaUrl);
 	}
+	
+	public static void updateSeriesInfo() throws Exception{
+		
+		LocalConf conf = LocalConf.getInstance();
+		
+		for(Series series : conf.series) {
+			String mainSeriesPageUrl = conf.animeFlvSeriesMainPageBaseUrl + series.seriesPage;
+			
+			Document mainSeriesPage = Jsoup.connect(mainSeriesPageUrl).maxBodySize(0).get();
+			//System.out.println(mainSeriesPage.html());
+			
+			
+			//series.seriesFileId = WebScrapper.getSeriesId(mainSeriesPage);
+			String seriesStatus = WebScrapper.getSeriesStatus(mainSeriesPage);
+			if(seriesStatus.equals("Finalizado")) {
+				series.finished = true;
+			}
+			
+			ArrayList<String> episodesUrls = WebScrapper.getAllEpisodesUrls(mainSeriesPage);
+			
+			for(String episodeUrl : episodesUrls) {
+				String episodeNumberRaw = episodeUrl.replaceAll(".+-", "") ;
+				String episodeNumber = "999";
+				
+				try {
+					episodeNumber = String.format("%02d", Integer.parseInt(episodeNumberRaw));
+				}
+				catch(NumberFormatException ex) {
+					//TODO
+				}
+				series.episodesAvailable.put(episodeNumber, mainSeriesPageUrl);
+			}
+		}
+		
+	}
 }
