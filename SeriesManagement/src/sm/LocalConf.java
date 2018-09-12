@@ -214,7 +214,9 @@ public class LocalConf {
 			Series series = new Series();
 
 			series.seriesPage = seriesPage;
-			series.seriesName = seriesPage.split("/")[1];
+			series.seriesName = this.ongoingSeries.get(seriesPage);
+			series.seriesFileId = seriesPage.split("/")[0];
+			series.seriesFileName = seriesPage.split("/")[1];
 
 			series.episodesDownloaded = this.episodeTracking.get(seriesPage);	
 			

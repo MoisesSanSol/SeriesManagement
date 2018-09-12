@@ -1,6 +1,8 @@
 package sm;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -169,6 +171,42 @@ public class Dispatcher {
 				series.episodesAvailable.put(episodeNumber, mainSeriesPageUrl);
 			}
 		}
+	}
+	
+	public static void cleanFinishedSeries() throws Exception{
 		
+		System.out.println("*** Clean Finished Series ***\n");
+		
+		Dispatcher.updateSeriesInfo();
+		LocalConf conf = LocalConf.getInstance();
+		ArrayList<Series> ongoingSeriesList = conf.series;
+		ArrayList<Series> finishedSeriesList = ConfHandler.getFinishedSeriesList();
+		
+		for(Series ongoingSeries : ongoingSeriesList){
+			
+			System.out.println("** Checking series: " + ongoingSeries.seriesName);
+			
+			if(ongoingSeries.finished){
+				
+				System.out.println("* Finished");
+				
+				if(ongoingSeries.episodesAvailable.size() == ongoingSeries.episodesDownloaded.size()){
+				
+					System.out.println("* Everything downloaded!");
+					
+					File ongoingSeriesFolder = new File(conf.ongoingSeriesFolderPath + ongoingSeries.seriesName);
+					File finishedSeriesFolder = new File(conf.finishedSeriesFolderPath + ongoingSeries.seriesName);
+					
+					Files.move(ongoingSeriesFolder.toPath(), finishedSeriesFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
+					
+					finishedSeriesList.add(ongoingSeries);
+					ongoingSeriesList.remove(ongoingSeries);
+				}
+			}
+			
+		}
+		
+		ConfHandler.setFinishedSeriesList(finishedSeriesList);
+		ConfHandler.setOngoingSeriesList(ongoingSeriesList);
 	}
 }

@@ -5,10 +5,10 @@ import java.util.LinkedHashMap;
 
 public class Series {
 
-	String folderName;
 	String seriesName;
 	String seriesPage;
 	String seriesFileId;
+	String seriesFileName;
 	
 	LinkedHashMap<String, String> episodesAvailable;
 	ArrayList<String> episodesDownloaded;

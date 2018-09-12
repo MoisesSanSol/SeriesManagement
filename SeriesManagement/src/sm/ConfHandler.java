@@ -1,15 +1,11 @@
 package sm;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Properties;
 
 public class ConfHandler {
 
@@ -65,5 +61,30 @@ public class ConfHandler {
 		}
 		
 		Files.write(file.toPath(), fileContent, StandardCharsets.UTF_8);
+	}
+	
+	public static void setOngoingSeriesList(ArrayList<Series> seriesList) throws Exception{
+		
+		LocalConf conf = LocalConf.getInstance();
+		String ongoingSeriesListFilePath = conf.configurationFilesFolderPath + conf.ongoingSeriesFileName;
+		File ongoingSeriesListFile = new File(ongoingSeriesListFilePath);
+		
+		ArrayList<String> fileContent = new ArrayList<String>();
+		fileContent.add("### Actually Ongoing");
+		fileContent.add("");
+		
+		Collections.sort(seriesList, new Comparator<Series>(){
+		     public int compare(Series o1, Series o2){
+		         return o1.seriesName.compareTo(o2.seriesName);
+		     }
+		});
+		
+		for(Series series : seriesList){
+			
+			String entry = series.seriesPage + "=" + series.seriesName;
+			fileContent.add(entry);
+		}
+		
+		Files.write(ongoingSeriesListFile.toPath(), fileContent, StandardCharsets.UTF_8);
 	}
 }

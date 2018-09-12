@@ -9,7 +9,7 @@ public class Maintenance {
 
 		try{
 			
-			// Testing
+			Dispatcher.cleanFinishedSeries();
 			
 			Audit.getInstance().dump();
 		}
