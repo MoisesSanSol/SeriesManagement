@@ -179,10 +179,10 @@ public class Dispatcher {
 		
 		Dispatcher.updateSeriesInfo();
 		LocalConf conf = LocalConf.getInstance();
-		ArrayList<Series> ongoingSeriesList = conf.series;
+		ArrayList<Series> ongoingSeriesList = new ArrayList<Series>(conf.series);
 		ArrayList<Series> finishedSeriesList = ConfHandler.getFinishedSeriesList();
 		
-		for(Series ongoingSeries : ongoingSeriesList){
+		for(Series ongoingSeries : conf.series){
 			
 			System.out.println("** Checking series: " + ongoingSeries.seriesName);
 			
