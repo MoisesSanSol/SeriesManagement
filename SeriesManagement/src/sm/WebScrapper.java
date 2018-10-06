@@ -245,8 +245,8 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 				String html = script.outerHtml();
 				if(html.contains("var episodes ")) {
 					
-					String episodeName = html.split(";")[0].split("\r\n")[1].replaceAll(".+?\\[\".+?\",\".+?\",\"", "").replaceAll("\".+", "");
-					String episodesVar = html.split(";")[1].split("\r\n")[1].replaceAll(".+?\\[\\[", "").replaceAll("\\]\\]", "");
+					String episodeName = html.split("];")[0].split("\r\n")[1].replaceAll(".+?\\[\".+?\",\".+?\",\"", "").replaceAll("\".*", "");
+					String episodesVar = html.split("];")[1].split("\r\n")[1].replaceAll(".+?\\[\\[", "").replaceAll("\\]$", "");
 					String[] episodesPairs = episodesVar.split("\\],\\[");
 					
 					for(String episodePair : episodesPairs){
