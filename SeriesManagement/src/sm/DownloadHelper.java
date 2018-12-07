@@ -51,7 +51,7 @@ public class DownloadHelper {
 			writerHtml.write("<a href='" + alternativeUrl + "' target='_blank'>" + seriesShort + "_" + episodeNumber + " (" + host + ")</a><br>\r\n");
 			writerRename.write("ren \"" + seriesFileId + "_" + episodeNumber + ".mp4\" \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
 			writerRename.write("pause\r\n");
-			writerRename.write("move \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\" \"" + targetFolderPath + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
+			writerRename.write("copy \"" + seriesShort + "_" + paddedEpisodeNumber + ".mp4\" \"" + targetFolderPath + seriesShort + "_" + paddedEpisodeNumber + ".mp4\"\r\n");
 			writerRename.write("pause\r\n");
 		}
 		writerHtml.close();

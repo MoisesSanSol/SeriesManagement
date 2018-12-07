@@ -109,7 +109,7 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 			String urlBase = url.replaceAll("\\.com\\/.+", ".com");
 			System.out.println("Scrapping page: " + url);
 			
-			Document doc = Jsoup.connect(url).maxBodySize(0).get();	
+			Document doc = Jsoup.connect(url).maxBodySize(0).validateTLSCertificates(false).get();	
 	
 			if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
 				System.out.println("File not available anymore.");
