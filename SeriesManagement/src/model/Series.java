@@ -1,20 +1,20 @@
-package sm;
+package model;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class Series {
 
-	String seriesName;
-	String seriesPage;
-	String seriesFileId;
-	String seriesFileName;
+	public String seriesName;
+	public String seriesPage;
+	public String seriesFileId;
+	public String seriesFileName;
 	
-	LinkedHashMap<String, String> episodesAvailable;
-	ArrayList<String> episodesDownloaded;
+	public LinkedHashMap<String, String> episodesAvailable;
+	public ArrayList<String> episodesDownloaded;
 	
-	boolean finished;
-	boolean completed;
+	public boolean finished;
+	public boolean completed;
 	
 	public Series() {
 		

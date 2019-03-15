@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import conf.LocalConf;
+
 public class DownloadHelper {
 
 	public static void downloadVideo(String url, File target) throws Exception{

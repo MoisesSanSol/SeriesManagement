@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import conf.LocalConf;
+import model.Series;
+
 public class ConfHandler {
 
 	public static ArrayList<Series> getFinishedSeriesList() throws Exception{

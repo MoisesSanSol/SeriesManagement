@@ -14,6 +14,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import conf.LocalConf;
+
 public class WebScrapper {
 
 	
@@ -100,7 +102,7 @@ public class WebScrapper {
         return fileUrl;
 	}
 	
-public static String getFileUrlFromZippyshareV3(String url) throws Exception{
+	public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 		
 		String fileUrl = "NotFound";
 
@@ -357,6 +359,66 @@ public static String getFileUrlFromZippyshareV3(String url) throws Exception{
 	}
 
 	public static String getFileUrlFromZippyshareV6(String url) throws Exception{
+		
+		String fileUrl = "NotFound";
+	
+		String urlBase = url.replaceAll("\\.com\\/.+", ".com");
+		System.out.println("Scrapping page: " + url);
+		
+		Document doc = Jsoup.connect(url).maxBodySize(0).get();	
+		//System.out.println("html: " + doc.html());
+		
+		if(!doc.select("div:contains(File has expired and does not exist anymore on this server)").isEmpty()){
+			System.out.println("File not available anymore.");
+		}
+		else if(!doc.select("div:contains(File does not exist on this server)").isEmpty()) {
+			System.out.println("File not available anymore.");
+		}
+		else{
+			Element downloadAnchor = doc.select("a#dlbutton").first();
+			Element omg = downloadAnchor.nextElementSibling();
+			Element javascript = omg.nextElementSibling();
+			//System.out.println(javascript.html());
+			
+			String[] lines =  javascript.html().split("\n");
+
+			String thing = "(\\d+)\\Q%1000 + a() + b() + c() + d + 5/5\\E";
+			Pattern patUrl = Pattern.compile("document.getElementById\\('dlbutton'\\).href = \"(.+?)\"\\+\\(" + thing + "\\)\\+\"(.+?.mp4)\";");
+            Matcher matUrl = patUrl.matcher(lines[5]);
+			
+            if (matUrl.find()) {
+
+	        	int a = Integer.parseInt(matUrl.group(2));
+            	int b = 1 + 2 + 3 + (2*2) + (5/5); 
+            	int dynamicUrl = (a%1000) + b;
+            	
+            	fileUrl = urlBase + matUrl.group(1) + dynamicUrl + matUrl.group(3);
+	
+            	System.out.println("File url from Zippyshare: " + fileUrl);
+	        }
+	        else {
+	        	System.out.println("Error building url.");
+	        }
+		}
+		return fileUrl;
+	}
+	
+	public static String getFileUrlFromZippyshareV7(String url) throws Exception{
+		
+		/* Javascript code example:
+			<span id="omg" class="2" style="display:none;"></span>
+			<script type="text/javascript">
+			    var a = function() {return 1};
+			    var b = function() {return a() + 1};
+			    var c = function() {return b() + 1};
+			    var d = document.getElementById('omg').getAttribute('class');
+			    if (true) { d = d*2;}
+			    document.getElementById('dlbutton').href = "/d/dYJAYKjO/"+(389341%1000 + a() + b() + c() + d + 5/5)+"/3024_2.mp4";
+			    if (document.getElementById('fimage')) {
+			        document.getElementById('fimage').href = "/i/dYJAYKjO/"+(389341%1000 + a() + b() + c() + d + 5/5)+"/3024_2.mp4";
+			    }
+			</script>
+		 */
 		
 		String fileUrl = "NotFound";
 	

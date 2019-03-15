@@ -10,6 +10,10 @@ import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import conf.LocalConf;
+import model.Series;
+import scrappers.ZippyshareScrapper;
+
 public class Dispatcher {
 
 	public static void downloadAllOngoingSeries() throws Exception{
@@ -74,7 +78,7 @@ public class Dispatcher {
 				
 				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
 				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
-				String fileUrl = WebScrapper.getFileUrlFromZippyshareV3(zippyUrl);
+				String fileUrl = ZippyshareScrapper.getFileUrlFromZippyshare(zippyUrl);
 				if(!fileUrl.equals("NotFound")){
 					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/" + seriesShort + "_" + episodeNumber + ".mp4");
 					DownloadHelper.downloadVideo(fileUrl, localTargetFile);
@@ -99,7 +103,7 @@ public class Dispatcher {
 			
 				Document episodePage = Jsoup.connect(episodeUrl).maxBodySize(0).get();
 				String zippyUrl = WebScrapper.getZippyshareUrl(episodePage);
-				String fileUrl = WebScrapper.getFileUrlFromZippyshareV3(zippyUrl);
+				String fileUrl = ZippyshareScrapper.getFileUrlFromZippyshare(zippyUrl);
 				if(!fileUrl.equals("NotFound")){
 					File localTargetFile = new File(conf.downloadTargetFolder.getAbsolutePath() + "/" + seriesShort + "_" + episodeNumber + ".mp4");
 					DownloadHelper.downloadVideo(fileUrl, localTargetFile);
@@ -198,6 +202,14 @@ public class Dispatcher {
 					File finishedSeriesFolder = new File(conf.finishedSeriesFolderPath + ongoingSeries.seriesName);
 					
 					Files.move(ongoingSeriesFolder.toPath(), finishedSeriesFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				
+					for(String episode : ongoingSeries.episodesDownloaded){
+						String episodeFilePath = conf.downloadTargetFolderPath + ongoingSeries.seriesFileName + "_" + episode + ".mp4";
+						File episodeFile = new File(episodeFilePath);
+						if(episodeFile.exists()){
+							episodeFile.delete();
+						}
+					}
 					
 					finishedSeriesList.add(ongoingSeries);
 					ongoingSeriesList.remove(ongoingSeries);

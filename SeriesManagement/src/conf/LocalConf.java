@@ -1,4 +1,4 @@
-package sm;
+package conf;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +7,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+
+import model.Series;
+import sm.Audit;
 
 // Singleton Configuration class.
 public class LocalConf {

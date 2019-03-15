@@ -1,14 +1,18 @@
-package sm;
+package main;
 
-public class Main {
+import sm.Audit;
+import sm.Dispatcher;
 
+public class Maintenance {
+	
+	// Check completion status of older series
 	public static void main(String[] args) throws Exception{
 
-		System.out.println("*** Starting ***\n");
+		System.out.println("*** Maintenance Starting ***\n");
 
 		try{
 			
-			Dispatcher.downloadAllOngoingSeries();
+			Dispatcher.cleanFinishedSeries();
 			
 			Audit.getInstance().dump();
 		}
@@ -19,5 +23,5 @@ public class Main {
 		
 		System.out.println("*** Finished ***");
 	}
-
+	
 }
